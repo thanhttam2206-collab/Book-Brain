@@ -1,45 +1,25 @@
 import 'package:book_brain/service/api_service/response/search_book_response.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
-import 'package:book_brain/service/ads/ad_defaults.dart';
-import 'package:book_brain/service/ads/ad_placement.dart';
-import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:flutter/material.dart';
 
 class BooksGridView extends StatelessWidget {
   final List<SearchBookResponse> books;
   final Function(SearchBookResponse book) onTap;
   final ScrollController? scrollController;
-  final AdPlacement adPlacement;
 
   const BooksGridView({
     Key? key,
     required this.books,
     required this.onTap,
     this.scrollController,
-    this.adPlacement = AdPlacement.searchResultsInline,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Tạo danh sách item (2 sách 1 hàng)
     List<Widget> rows = [];
-    int count = 0;
     for (int i = 0; i < books.length; i += 2) {
-      // Chèn NativeAd sau mỗi 6 sách
-      if (count >= AdDefaults.nativeFirstContentPosition &&
-          (count - AdDefaults.nativeFirstContentPosition) %
-                  AdDefaults.nativeContentInterval ==
-              0 &&
-          books.length >= 5) {
-        rows.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: NativeBookAdWidget(placement: adPlacement),
-          ),
-        );
-      }
       List<Widget> rowChildren = [];
       rowChildren.add(
         Expanded(
@@ -69,7 +49,6 @@ class BooksGridView extends StatelessWidget {
         ),
       );
       rows.add(SizedBox(height: 16));
-      count += 2;
     }
     return ListView(
       controller: scrollController,
@@ -163,14 +142,12 @@ class BooksListView extends StatelessWidget {
   final List<SearchBookResponse> books;
   final Function(SearchBookResponse book) onTap;
   final ScrollController? scrollController;
-  final AdPlacement adPlacement;
 
   const BooksListView({
     Key? key,
     required this.books,
     required this.onTap,
     this.scrollController,
-    this.adPlacement = AdPlacement.searchResultsInline,
   }) : super(key: key);
 
   @override
@@ -178,16 +155,9 @@ class BooksListView extends StatelessWidget {
     return ListView.builder(
       controller: scrollController,
       padding: EdgeInsets.only(bottom: 16),
-      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
+      itemCount: books.length,
       itemBuilder: (context, index) {
-        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: NativeBookAdWidget(placement: adPlacement),
-          );
-        }
-        final actualIndex = InlineAdListHelper.getContentIndex(index);
-        final book = books[actualIndex];
+        final book = books[index];
         return GestureDetector(
           onTap: () => onTap(book),
           child: BookListItem(book: book),

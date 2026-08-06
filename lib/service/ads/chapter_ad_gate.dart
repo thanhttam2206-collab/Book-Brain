@@ -17,14 +17,24 @@ class ChapterAdGate {
   static final ChapterAdGate instance = ChapterAdGate._();
   Future<ChapterAccessResult>? _activeRequest;
 
+  bool requiresReward({required int bookId, required int chapterNumber}) {
+    return AdMobService.instance.adsEnabled &&
+        chapterNumber > AdDefaults.freeChapterCount &&
+        !_isUnlocked(bookId, chapterNumber);
+  }
+
   Future<ChapterAccessResult> requestAccess({
     required int bookId,
     required int chapterNumber,
+    bool userConsentedToRewarded = false,
   }) {
     if (!AdMobService.instance.adsEnabled ||
         chapterNumber <= AdDefaults.freeChapterCount ||
         _isUnlocked(bookId, chapterNumber)) {
       return Future.value(ChapterAccessResult.granted);
+    }
+    if (!userConsentedToRewarded) {
+      return Future.value(ChapterAccessResult.denied);
     }
     if (_activeRequest != null) {
       return Future.value(ChapterAccessResult.denied);

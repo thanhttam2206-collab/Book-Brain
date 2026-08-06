@@ -14,45 +14,51 @@ class AdaptiveBannerAdWidget extends StatefulWidget {
 
 class _AdaptiveBannerAdWidgetState extends State<AdaptiveBannerAdWidget> {
   BannerAd? _ad;
-  bool _loaded = false;
-  int? _requestedWidth;
+  Widget? _adWidget;
+  bool _loadScheduled = false;
 
-  Future<void> _load(int width) async {
-    if (!AdMobService.instance.adsEnabled ||
-        width <= 0 ||
-        width == _requestedWidth) {
+  void _scheduleLoad(double availableWidth) {
+    if (_loadScheduled ||
+        _ad != null ||
+        !AdMobService.instance.adsEnabled ||
+        availableWidth < AdSize.banner.width) {
       return;
     }
-    _requestedWidth = width;
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      width,
-    );
-    if (!mounted || size == null || !AdMobService.instance.adsEnabled) return;
-    _ad?.dispose();
+    _loadScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _load();
+    });
+  }
+
+  void _load() {
     final ad = BannerAd(
       adUnitId: AdMobService.instance.getAdUnitId('banner'),
-      size: size,
+      size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (loadedAd) {
           if (!mounted || loadedAd != _ad) return;
-          setState(() => _loaded = true);
+          final loadedBanner = loadedAd as BannerAd;
+          setState(() {
+            // Keep one AdWidget instance for the lifetime of this BannerAd.
+            // Recreating it can ask iOS to mount the same UIKit view twice.
+            _adWidget = AdWidget(ad: loadedBanner);
+          });
         },
         onAdFailedToLoad: (failedAd, _) {
           failedAd.dispose();
           if (!mounted || failedAd != _ad) return;
           setState(() {
             _ad = null;
-            _loaded = false;
+            _adWidget = null;
+            _loadScheduled = false;
           });
         },
       ),
     );
-    setState(() {
-      _ad = ad;
-      _loaded = false;
-    });
-    await ad.load();
+    _ad = ad;
+    ad.load();
   }
 
   @override
@@ -66,19 +72,23 @@ class _AdaptiveBannerAdWidgetState extends State<AdaptiveBannerAdWidget> {
     if (!AdMobService.instance.adsEnabled) return const SizedBox.shrink();
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width =
+        final availableWidth =
             constraints.maxWidth.isFinite
-                ? constraints.maxWidth.floor()
-                : MediaQuery.sizeOf(context).width.floor();
-        if (width > 0 && width != _requestedWidth) {
-          WidgetsBinding.instance.addPostFrameCallback((_) => _load(width));
-        }
-        final ad = _ad;
-        if (!_loaded || ad == null) return const SizedBox.shrink();
+                ? constraints.maxWidth
+                : MediaQuery.sizeOf(context).width;
+        _scheduleLoad(availableWidth);
+        final adWidget = _adWidget;
+        if (adWidget == null) return const SizedBox.shrink();
         return SizedBox(
-          width: ad.size.width.toDouble(),
-          height: ad.size.height.toDouble(),
-          child: AdWidget(key: ObjectKey(ad), ad: ad),
+          width: double.infinity,
+          height: AdSize.banner.height.toDouble(),
+          child: Center(
+            child: SizedBox(
+              width: AdSize.banner.width.toDouble(),
+              height: AdSize.banner.height.toDouble(),
+              child: adWidget,
+            ),
+          ),
         );
       },
     );

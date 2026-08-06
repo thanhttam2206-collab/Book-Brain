@@ -3,8 +3,7 @@ import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
 import 'package:book_brain/service/api_service/response/favorites_response.dart';
 import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
-import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
@@ -121,6 +120,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           ? _buildGridView(presenter)
                           : _buildListView(presenter),
                 ),
+                if (!presenter.isLoading &&
+                    presenter.favorites.isNotEmpty &&
+                    MediaQuery.viewInsetsOf(context).bottom == 0)
+                  const AdaptiveBannerAdWidget(
+                    placement: AdPlacement.favoritesInline,
+                  ),
               ],
             ),
           ),
@@ -310,23 +315,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             childAspectRatio: 0.65,
           ),
           padding: EdgeInsets.only(top: 8, bottom: 16),
-          itemCount: InlineAdListHelper.getDisplayItemCount(
-            filteredFavorites.length,
-          ),
+          itemCount: filteredFavorites.length,
           itemBuilder: (context, index) {
-            if (InlineAdListHelper.isAdDisplayIndex(
-              index,
-              filteredFavorites.length,
-            )) {
-              return const NativeBookAdWidget(
-                placement: AdPlacement.favoritesInline,
-              );
-            }
-            final contentIndex = InlineAdListHelper.getContentIndex(index);
-            return _buildGridItem(
-              filteredFavorites[contentIndex],
-              contentIndex,
-            );
+            return _buildGridItem(filteredFavorites[index], index);
           },
         );
   }
@@ -338,23 +329,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ? _buildSearchEmptyState()
         : ListView.builder(
           padding: EdgeInsets.only(top: 8, bottom: 16),
-          itemCount: InlineAdListHelper.getDisplayItemCount(
-            filteredFavorites.length,
-          ),
+          itemCount: filteredFavorites.length,
           itemBuilder: (context, index) {
-            if (InlineAdListHelper.isAdDisplayIndex(
-              index,
-              filteredFavorites.length,
-            )) {
-              return const NativeBookAdWidget(
-                placement: AdPlacement.favoritesInline,
-              );
-            }
-            final contentIndex = InlineAdListHelper.getContentIndex(index);
-            return _buildListItem(
-              filteredFavorites[contentIndex],
-              contentIndex,
-            );
+            return _buildListItem(filteredFavorites[index], index);
           },
         );
   }

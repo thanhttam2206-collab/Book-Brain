@@ -13,6 +13,7 @@ class NativeBookAdWidget extends StatefulWidget {
 }
 
 class _NativeBookAdWidgetState extends State<NativeBookAdWidget> {
+  static const double _compactHeight = 100;
   NativeAd? _ad;
   bool _loaded = false;
 
@@ -42,7 +43,7 @@ class _NativeBookAdWidgetState extends State<NativeBookAdWidget> {
         },
       ),
       nativeTemplateStyle: NativeTemplateStyle(
-        templateType: TemplateType.medium,
+        templateType: TemplateType.small,
         mainBackgroundColor: Colors.white,
         callToActionTextStyle: NativeTemplateTextStyle(
           textColor: Colors.white,
@@ -67,7 +68,7 @@ class _NativeBookAdWidgetState extends State<NativeBookAdWidget> {
       return const SizedBox.shrink();
     }
     return SizedBox(
-      height: 120,
+      height: _compactHeight,
       width: double.infinity,
       child: AdWidget(key: ObjectKey(ad), ad: ad),
     );

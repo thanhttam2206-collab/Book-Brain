@@ -13,7 +13,7 @@ import 'package:book_brain/utils/core/helpers/auth_helper.dart';
 import 'package:book_brain/utils/utils.dart';
 import 'package:book_brain/utils/widget/base_appbar.dart';
 import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
+import 'package:book_brain/widgets/ads/chapter_reward_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
@@ -98,12 +98,26 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
     setState(() => _isRewardedLoading = true);
     final bookId = widget.bookId ?? 1;
     final initialChapter = widget.chapterId ?? 1;
+    var consentedToRewarded = false;
+    if (!widget.accessAlreadyGranted &&
+        ChapterAdGate.instance.requiresReward(
+          bookId: bookId,
+          chapterNumber: initialChapter,
+        )) {
+      consentedToRewarded = await showChapterRewardPrompt(context);
+      if (!mounted) return;
+      if (!consentedToRewarded) {
+        Navigator.of(context).pop();
+        return;
+      }
+    }
     final result =
         widget.accessAlreadyGranted
             ? ChapterAccessResult.granted
             : await ChapterAdGate.instance.requestAccess(
               bookId: bookId,
               chapterNumber: initialChapter,
+              userConsentedToRewarded: consentedToRewarded,
             );
     if (!mounted) return;
     if (result == ChapterAccessResult.denied) {
@@ -224,10 +238,19 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
       showToastTop(message: 'Bạn đang ở chương cuối cùng');
       return;
     }
+    var consentedToRewarded = false;
+    if (ChapterAdGate.instance.requiresReward(
+      bookId: widget.bookId ?? 1,
+      chapterNumber: newChapterNumber,
+    )) {
+      consentedToRewarded = await showChapterRewardPrompt(context);
+      if (!mounted || !consentedToRewarded) return;
+    }
     setState(() => _isRewardedLoading = true);
     final result = await ChapterAdGate.instance.requestAccess(
       bookId: widget.bookId ?? 1,
       chapterNumber: newChapterNumber,
+      userConsentedToRewarded: consentedToRewarded,
     );
     if (!mounted) return;
     if (result == ChapterAccessResult.temporarilyGrantedAfterAdFailure) {
@@ -676,14 +699,9 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
                             },
                           ),
 
-                          if (chapterNumber.isOdd)
-                            const AdaptiveBannerAdWidget(
-                              placement: AdPlacement.readingChapterEndBanner,
-                            )
-                          else
-                            const NativeBookAdWidget(
-                              placement: AdPlacement.readingChapterEndNative,
-                            ),
+                          const AdaptiveBannerAdWidget(
+                            placement: AdPlacement.readingChapterEndBanner,
+                          ),
 
                           SizedBox(height: kMediumPadding),
 

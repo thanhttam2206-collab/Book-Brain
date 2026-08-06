@@ -124,45 +124,49 @@ class _SearchScreenState extends State<SearchScreen> {
               horizontal: kMediumPadding,
               vertical: 16,
             ),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo is ScrollEndNotification) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    // Khi cuộn đến cuối trang
-                    final searchNotifier = Provider.of<SearchNotifier>(
-                      context,
-                      listen: false,
-                    );
-                    searchNotifier.loadMore();
-                  }
-                }
-                return true;
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (recentSearches.isNotEmpty) ...[
-                      _buildRecentSearches(),
-                      SizedBox(height: 20),
-                    ],
+            child: Column(
+              children: [
+                Expanded(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo is ScrollEndNotification &&
+                          scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
+                        Provider.of<SearchNotifier>(
+                          context,
+                          listen: false,
+                        ).loadMore();
+                      }
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (recentSearches.isNotEmpty) ...[
+                            _buildRecentSearches(),
+                            SizedBox(height: 20),
+                          ],
 
-                    _buildPopularCategories(),
-                    SizedBox(height: 20),
+                          _buildPopularCategories(),
+                          SizedBox(height: 20),
 
-                    _buildTrendingBooks(),
+                          _buildTrendingBooks(),
 
-                    SizedBox(height: 20),
-
-                    Center(
-                      child: AdaptiveBannerAdWidget(
-                        placement: AdPlacement.searchLandingFooter,
+                          SizedBox(height: 20),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                if (MediaQuery.viewInsetsOf(context).bottom == 0)
+                  const SafeArea(
+                    top: false,
+                    child: AdaptiveBannerAdWidget(
+                      placement: AdPlacement.searchLandingFooter,
+                    ),
+                  ),
+              ],
             ),
           ),
         ],

@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 
 import '../../../utils/widget/loading_widget.dart';
 import '../../history_reading/view/history_reading_screen.dart';
@@ -308,13 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
 
-                      // Thêm Native Ad sau danh sách Top thịnh hành
                       SizedBox(height: kMediumPadding),
-                      const NativeBookAdWidget(
-                        key: ValueKey('home-trending-native'),
-                        placement: AdPlacement.homeAfterTrending,
-                      ),
-
                       HorizontalBookList(
                         title: 'Dành cho bạn',
                         books: presenter.recommenlist,
@@ -331,14 +324,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
 
-                      // Thêm Banner Ad ở cuối màn hình
-                      SizedBox(height: kMediumPadding),
-                      const AdaptiveBannerAdWidget(
-                        key: ValueKey('home-footer-banner'),
-                        placement: AdPlacement.homeFooter,
-                      ),
                       SizedBox(height: kMediumPadding),
                     ],
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: SafeArea(
+                  top: false,
+                  child: AdaptiveBannerAdWidget(
+                    placement: AdPlacement.homeFooter,
                   ),
                 ),
               ),

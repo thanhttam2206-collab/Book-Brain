@@ -2,8 +2,7 @@ import 'package:book_brain/screen/home/provider/home_notifier.dart';
 import 'package:book_brain/service/api_service/response/book_info_response.dart';
 import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
-import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -200,7 +199,14 @@ class _AllBookScreenState extends State<AllBookScreen> {
       return _buildEmptyState(book);
     }
 
-    return _isGridView ? _buildGridView(book) : _buildListView(book);
+    return Column(
+      children: [
+        Expanded(
+          child: _isGridView ? _buildGridView(book) : _buildListView(book),
+        ),
+        const AdaptiveBannerAdWidget(placement: AdPlacement.allBooksInline),
+      ],
+    );
   }
 
   Widget _buildGridView(List<BookInfoResponse> books) {
@@ -248,16 +254,8 @@ class _AllBookScreenState extends State<AllBookScreen> {
                 crossAxisSpacing: 16,
                 childAspectRatio: 0.65,
               ),
-              itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
-              itemBuilder: (context, index) {
-                if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
-                  return const NativeBookAdWidget(
-                    placement: AdPlacement.allBooksInline,
-                  );
-                }
-                final contentIndex = InlineAdListHelper.getContentIndex(index);
-                return _buildGridItem(books[contentIndex]);
-              },
+              itemCount: books.length,
+              itemBuilder: (context, index) => _buildGridItem(books[index]),
             ),
           ),
           if (isLoadingMore || !hasMore)
@@ -311,16 +309,8 @@ class _AllBookScreenState extends State<AllBookScreen> {
             child: ListView.builder(
               controller: _scrollController,
               padding: EdgeInsets.all(16),
-              itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
-              itemBuilder: (context, index) {
-                if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
-                  return const NativeBookAdWidget(
-                    placement: AdPlacement.allBooksInline,
-                  );
-                }
-                final contentIndex = InlineAdListHelper.getContentIndex(index);
-                return _buildListItem(books[contentIndex]);
-              },
+              itemCount: books.length,
+              itemBuilder: (context, index) => _buildListItem(books[index]),
             ),
           ),
           if (isLoadingMore || !hasMore)

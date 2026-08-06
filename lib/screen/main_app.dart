@@ -27,6 +27,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     if (AdMobService.instance.adsEnabled) {
       AdMobService.instance.preloadInterstitial();
       AdMobService.instance.preloadRewarded();
+      AdMobService.instance.preloadAppOpen();
     }
   }
 

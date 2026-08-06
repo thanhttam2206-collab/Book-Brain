@@ -5,6 +5,7 @@ import 'package:book_brain/screen/search_screen/provider/search_notifier.dart';
 import 'package:book_brain/screen/search_screen/widget/book_widgets.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/widget/empty_data.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -244,6 +245,12 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 ),
                       ),
                     ),
+                if (!presenter.isLoading &&
+                    presenter.searchBookResponse.isNotEmpty &&
+                    MediaQuery.viewInsetsOf(context).bottom == 0)
+                  const AdaptiveBannerAdWidget(
+                    placement: AdPlacement.searchResultsInline,
+                  ),
                 if (presenter.isLoading &&
                     presenter.searchBookResponse.isNotEmpty)
                   Padding(

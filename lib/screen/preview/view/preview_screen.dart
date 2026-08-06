@@ -4,7 +4,6 @@ import 'package:book_brain/screen/detail_book/widget/bottom_sheet_selector.dart'
 import 'package:book_brain/screen/login/widget/button_widget.dart';
 import 'package:book_brain/screen/preview/provider/preview_notifier.dart';
 import 'package:book_brain/screen/reivew_book/view/review_book_screen.dart';
-import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/service/ads/chapter_ad_gate.dart';
 import 'package:book_brain/utils/core/constants/color_constants.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
@@ -15,7 +14,7 @@ import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/auth_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
+import 'package:book_brain/widgets/ads/chapter_reward_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -60,9 +59,22 @@ class _PreviewScreenState extends State<PreviewScreen> {
   Future<void> _requestChapterAccess(int bookId) async {
     if (_isChapterRequestInProgress) return;
     setState(() => _isChapterRequestInProgress = true);
+    var consentedToRewarded = false;
+    if (ChapterAdGate.instance.requiresReward(
+      bookId: bookId,
+      chapterNumber: chapterNumber,
+    )) {
+      consentedToRewarded = await showChapterRewardPrompt(context);
+      if (!mounted) return;
+      if (!consentedToRewarded) {
+        setState(() => _isChapterRequestInProgress = false);
+        return;
+      }
+    }
     final result = await ChapterAdGate.instance.requestAccess(
       bookId: bookId,
       chapterNumber: chapterNumber,
+      userConsentedToRewarded: consentedToRewarded,
     );
     if (!mounted) return;
     if (result == ChapterAccessResult.temporarilyGrantedAfterAdFailure) {
@@ -414,11 +426,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                     });
                                   },
                                   placeholder: 'Vui lòng chọn chương sách',
-                                ),
-
-                                SizedBox(height: kMediumPadding),
-                                const NativeBookAdWidget(
-                                  placement: AdPlacement.previewBookInline,
                                 ),
                               ],
                             ),

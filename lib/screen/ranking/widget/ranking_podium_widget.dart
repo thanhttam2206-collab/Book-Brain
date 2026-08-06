@@ -128,7 +128,7 @@ class RankingPodium extends StatelessWidget {
                                         itemCount: topAuthor.length,
                                         itemBuilder: (context, index) {
                                           return _buildRankingListItem(
-                                            topAuthor![index],
+                                            topAuthor[index],
                                             index,
                                           );
                                         },

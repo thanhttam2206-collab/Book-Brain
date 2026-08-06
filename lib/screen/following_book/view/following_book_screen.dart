@@ -2,8 +2,7 @@ import 'package:book_brain/screen/following_book/provider/subscription_notifier.
 import 'package:book_brain/service/api_service/response/subscriptions_response.dart';
 import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
-import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
-import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
@@ -273,9 +272,18 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
       return _buildEmptyState();
     }
 
-    return _isGridView
-        ? _buildGridView(filteredBooks)
-        : _buildListView(filteredBooks);
+    return Column(
+      children: [
+        Expanded(
+          child:
+              _isGridView
+                  ? _buildGridView(filteredBooks)
+                  : _buildListView(filteredBooks),
+        ),
+        if (MediaQuery.viewInsetsOf(context).bottom == 0)
+          const AdaptiveBannerAdWidget(placement: AdPlacement.followingInline),
+      ],
+    );
   }
 
   Widget _buildGridView(List<SubscriptionsResponse> books) {
@@ -287,30 +295,16 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
         crossAxisSpacing: 16,
         childAspectRatio: 0.65,
       ),
-      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
-      itemBuilder: (context, index) {
-        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
-          return const NativeBookAdWidget(
-            placement: AdPlacement.followingInline,
-          );
-        }
-        return _buildGridItem(books[InlineAdListHelper.getContentIndex(index)]);
-      },
+      itemCount: books.length,
+      itemBuilder: (context, index) => _buildGridItem(books[index]),
     );
   }
 
   Widget _buildListView(List<SubscriptionsResponse> books) {
     return ListView.builder(
       padding: EdgeInsets.all(16),
-      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
-      itemBuilder: (context, index) {
-        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
-          return const NativeBookAdWidget(
-            placement: AdPlacement.followingInline,
-          );
-        }
-        return _buildListItem(books[InlineAdListHelper.getContentIndex(index)]);
-      },
+      itemCount: books.length,
+      itemBuilder: (context, index) => _buildListItem(books[index]),
     );
   }
 
