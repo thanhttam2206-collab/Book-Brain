@@ -29,7 +29,7 @@ class RecommenResponse {
   final String? url;
   final int? views;
 
-  factory RecommenResponse.fromJson(Map<String, dynamic> json){
+  factory RecommenResponse.fromJson(Map<String, dynamic> json) {
     return RecommenResponse(
       authorId: json["author_id"],
       authorName: json["author_name"],
@@ -64,7 +64,7 @@ class RecommenResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$authorId, $authorName, $bookId, $categoryId, $categoryName, $excerpt, $imageUrl, $rating, $score, $status, $title, $url, $views, ";
   }
 }

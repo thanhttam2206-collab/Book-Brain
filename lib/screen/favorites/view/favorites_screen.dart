@@ -1,7 +1,9 @@
 import 'package:book_brain/screen/favorites/provider/favorites_notifier.dart';
 import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
 import 'package:book_brain/service/api_service/response/favorites_response.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
@@ -118,6 +120,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           ? _buildGridView(presenter)
                           : _buildListView(presenter),
                 ),
+                if (!presenter.isLoading &&
+                    presenter.favorites.isNotEmpty &&
+                    MediaQuery.viewInsetsOf(context).bottom == 0)
+                  const AdaptiveBannerAdWidget(
+                    placement: AdPlacement.favoritesInline,
+                  ),
               ],
             ),
           ),
@@ -359,10 +367,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: favorite.bookId),
-          ),
+        BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: favorite.bookId ?? 1,
+          sourcePlacement: AdPlacement.favoritesInline,
         );
       },
       child: Container(
@@ -508,10 +516,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: favorite.bookId),
-          ),
+        BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: favorite.bookId ?? 1,
+          sourcePlacement: AdPlacement.favoritesInline,
         );
       },
       child: Container(
@@ -642,12 +650,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           "Đọc tiếp",
                           Color(0xFF6357CC),
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        PreviewScreen(bookId: favorite.bookId),
-                              ),
+                            BookNavigationAdHelper.openBookPreviewWithAd(
+                              context: context,
+                              bookId: favorite.bookId ?? 1,
+                              sourcePlacement: AdPlacement.favoritesInline,
                             );
                           },
                         ),

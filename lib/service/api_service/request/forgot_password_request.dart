@@ -9,7 +9,7 @@ class ForgotPasswordRequest {
   final String? oldPassword;
   final String? newPassword;
 
-  factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json){
+  factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json) {
     return ForgotPasswordRequest(
       id: json["id"],
       oldPassword: json["oldPassword"],
@@ -24,7 +24,7 @@ class ForgotPasswordRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$id, $oldPassword, $newPassword, ";
   }
 }

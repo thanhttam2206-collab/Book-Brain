@@ -9,26 +9,40 @@ class BaseResponse<T> {
 
   factory BaseResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(dynamic json) fromJsonT,
+    T Function(Map<String, dynamic> json) fromJsonT,
   ) {
-    final dynamic rawData = json["data"];
-    List<T> responseData = [];
+    final rawData = json['data'];
+    final responseData = <T>[];
 
     if (rawData is List) {
-      responseData = List<T>.from(rawData.map((x) => fromJsonT(x)));
-    } else if (rawData is Map<String, dynamic> && rawData.isNotEmpty) {
-      responseData = [fromJsonT(rawData)];
+      for (final item in rawData) {
+        if (item is Map) {
+          responseData.add(fromJsonT(Map<String, dynamic>.from(item)));
+        }
+      }
+    } else if (rawData is Map && rawData.isNotEmpty) {
+      responseData.add(fromJsonT(Map<String, dynamic>.from(rawData)));
     }
 
     return BaseResponse<T>(
-      code: json["code"],
+      code: _asInt(json['code']),
       data: responseData,
-      status: json["status"],
-      message: json["message"],
-      error:
-          json["error"] ?? json["title"] ?? json["detail"] ?? json["message"],
+      status: _asString(json['status']),
+      message: _asString(json['message']),
+      error: _asString(
+        json['error'] ?? json['detail'] ?? json['title'] ?? json['message'],
+      ),
     );
   }
+
+  static int? _asInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '');
+  }
+
+  static String? _asString(dynamic value) =>
+      value == null ? null : value.toString();
 
   Map<String, dynamic> toJson() => {
     "code": code,

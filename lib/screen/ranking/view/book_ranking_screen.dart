@@ -1,4 +1,5 @@
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/extentions/size_extension.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
@@ -29,7 +30,6 @@ class _BookRankingScreenState extends State<BookRankingScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final presenter = Provider.of<RankingNotifier>(context);
@@ -54,10 +54,18 @@ class _BookRankingScreenState extends State<BookRankingScreen> {
                 itemCount: presenter.bookRanking!.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PreviewScreen(bookId: presenter.bookRanking?[index].bookId ?? 1,)));
-                      },
-                      child: _bookWidget(index + 1, presenter.bookRanking![index]));
+                    onTap: () {
+                      BookNavigationAdHelper.openBookPreviewWithAd(
+                        context: context,
+                        bookId: presenter.bookRanking?[index].bookId ?? 1,
+                        sourcePlacement: AdPlacement.rankingBooksInline,
+                      );
+                    },
+                    child: _bookWidget(
+                      index + 1,
+                      presenter.bookRanking![index],
+                    ),
+                  );
                 },
               ),
     );

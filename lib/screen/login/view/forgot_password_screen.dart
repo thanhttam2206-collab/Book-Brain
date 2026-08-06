@@ -1,4 +1,3 @@
-
 import 'package:book_brain/screen/login/view/login_screen.dart';
 import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
 import 'package:book_brain/screen/login/widget/button_widget.dart';
@@ -32,14 +31,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     // Kiểm tra email có khớp với biểu thức chính quy hay không
     return emailRegExp.hasMatch(email);
   }
+
   void resetPassword(BuildContext context) async {
     setState(() {
       _isForgot = true;
     });
-    if(isValidEmail(emailController.text) == false){
-      showToastTop(
-        message: 'Email không hợp lệ, hãy thử lại',
-      );
+    if (isValidEmail(emailController.text) == false) {
+      showToastTop(message: 'Email không hợp lệ, hãy thử lại');
       setState(() {
         _isForgot = false;
       });
@@ -47,24 +45,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
     try {
-
       showToastTop(
-        message: 'Email đặt lại mật khẩu đã được gửi thành công. Vui lòng kiểm tra email của bạn.',
+        message:
+            'Email đặt lại mật khẩu đã được gửi thành công. Vui lòng kiểm tra email của bạn.',
       );
       Navigator.of(context).pushNamed(LoginScreen.routeName);
     } catch (e) {
-      showToastTop(
-        message: 'Không gửi được email đặt lại mật khẩu',
-      );
+      showToastTop(message: 'Không gửi được email đặt lại mật khẩu');
       print("log ------------------- ${e.toString()}");
     } finally {
       setState(() {
         _isForgot = false;
       });
     }
-
-
-
   }
 
   @override
@@ -76,9 +69,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           titleString: 'Quên mật khẩu',
           child: Column(
             children: [
-              SizedBox(
-                height: kDefaultPadding * 5,
-              ),
+              SizedBox(height: kDefaultPadding * 5),
               TextField(
                 controller: emailController,
                 style: TextStyle(fontSize: 18, color: Colors.black),
@@ -98,9 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(
-                height: kDefaultPadding,
-              ),
+              SizedBox(height: kDefaultPadding),
               ButtonWidget(
                 title: 'Send',
                 isign: _isForgot,
@@ -110,7 +99,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         ),
         presenter.isLoading ? const LoadingWidget() : const SizedBox(),
-
       ],
     );
   }

@@ -25,7 +25,7 @@ class UpdateHistoryResponse {
   final DateTime? updatedAt;
   final String? completionRate;
 
-  factory UpdateHistoryResponse.fromJson(Map<String, dynamic> json){
+  factory UpdateHistoryResponse.fromJson(Map<String, dynamic> json) {
     return UpdateHistoryResponse(
       historyId: json["history_id"],
       userId: json["user_id"],
@@ -56,7 +56,7 @@ class UpdateHistoryResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$historyId, $userId, $bookId, $readingStatus, $startDate, $finishDate, $timesRead, $notes, $createdAt, $updatedAt, $completionRate, ";
   }
 }

@@ -13,7 +13,7 @@ class UpdateHistoryRequest {
   final String? notes;
   final int? currentChapterId;
 
-  factory UpdateHistoryRequest.fromJson(Map<String, dynamic> json){
+  factory UpdateHistoryRequest.fromJson(Map<String, dynamic> json) {
     return UpdateHistoryRequest(
       bookId: json["book_id"],
       readingStatus: json["reading_status"],
@@ -32,7 +32,7 @@ class UpdateHistoryRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $readingStatus, $completionRate, $notes, $currentChapterId";
   }
 }

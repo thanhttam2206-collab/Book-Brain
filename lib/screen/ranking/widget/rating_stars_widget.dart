@@ -27,9 +27,11 @@ class RatingStars extends StatelessWidget {
     required this.activeStar,
     required this.inactiveStar,
     this.halfStar, // Tham số tùy chọn cho nửa sao
-  }) :
-        assert(rating >= 0 && rating <= totalStars, 'Rating phải nằm trong khoảng 0 và tổng số sao'),
-        super(key: key);
+  }) : assert(
+         rating >= 0 && rating <= totalStars,
+         'Rating phải nằm trong khoảng 0 và tổng số sao',
+       ),
+       super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,7 @@ class RatingStars extends StatelessWidget {
             activeStar,
             width: starWidth,
             height: starHeight,
-            colorFilter: ColorFilter.mode(
-                activeColor,
-                BlendMode.srcIn
-            ),
+            colorFilter: ColorFilter.mode(activeColor, BlendMode.srcIn),
           );
         }
         // Nửa sao nếu chênh lệch nằm trong khoảng (0.0, 1.0)
@@ -59,10 +58,7 @@ class RatingStars extends StatelessWidget {
               halfStar!,
               width: starWidth,
               height: starHeight,
-              colorFilter: ColorFilter.mode(
-                  activeColor,
-                  BlendMode.srcIn
-              ),
+              colorFilter: ColorFilter.mode(activeColor, BlendMode.srcIn),
             );
           } else {
             // Nếu không có asset nửa sao, tạo một widget Stack để hiển thị nửa sao
@@ -73,10 +69,7 @@ class RatingStars extends StatelessWidget {
                   inactiveStar,
                   width: starWidth,
                   height: starHeight,
-                  colorFilter: ColorFilter.mode(
-                      inactiveColor,
-                      BlendMode.srcIn
-                  ),
+                  colorFilter: ColorFilter.mode(inactiveColor, BlendMode.srcIn),
                 ),
                 // Phần được tô màu tích cực
                 ClipRect(
@@ -85,10 +78,7 @@ class RatingStars extends StatelessWidget {
                     activeStar,
                     width: starWidth,
                     height: starHeight,
-                    colorFilter: ColorFilter.mode(
-                        activeColor,
-                        BlendMode.srcIn
-                    ),
+                    colorFilter: ColorFilter.mode(activeColor, BlendMode.srcIn),
                   ),
                 ),
               ],
@@ -101,10 +91,7 @@ class RatingStars extends StatelessWidget {
             inactiveStar,
             width: starWidth,
             height: starHeight,
-            colorFilter: ColorFilter.mode(
-                inactiveColor,
-                BlendMode.srcIn
-            ),
+            colorFilter: ColorFilter.mode(inactiveColor, BlendMode.srcIn),
           );
         }
       }),

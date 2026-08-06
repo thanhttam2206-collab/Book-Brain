@@ -37,7 +37,7 @@ class RankingService implements IRankingInterface {
       print("======> 2");
       return data;
     }
-    print("======> 3 ${response.data.toString()}" );
+    print("======> 3 ${response.data.toString()}");
 
     return null;
   }

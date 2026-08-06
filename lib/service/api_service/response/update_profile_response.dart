@@ -17,7 +17,7 @@ class UpdateProfileResponse {
   final String? clickSendKey;
   final DateTime? updatedAt;
 
-  factory UpdateProfileResponse.fromJson(Map<String, dynamic> json){
+  factory UpdateProfileResponse.fromJson(Map<String, dynamic> json) {
     return UpdateProfileResponse(
       id: json["id"],
       username: json["username"],
@@ -40,7 +40,7 @@ class UpdateProfileResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$id, $username, $email, $phoneNumber, $clickSendName, $clickSendKey, $updatedAt, ";
   }
 }

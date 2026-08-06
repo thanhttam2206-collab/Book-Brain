@@ -12,10 +12,7 @@ extension ExtendedTextStyle on TextStyle {
   }
 
   TextStyle get italic {
-    return copyWith(
-      fontWeight: FontWeight.normal,
-      fontStyle: FontStyle.italic,
-    );
+    return copyWith(fontWeight: FontWeight.normal, fontStyle: FontStyle.italic);
   }
 
   TextStyle get medium {
@@ -23,17 +20,11 @@ extension ExtendedTextStyle on TextStyle {
   }
 
   TextStyle get fontHeader {
-    return copyWith(
-      fontSize: 22,
-      height: 22 / 20,
-    );
+    return copyWith(fontSize: 22, height: 22 / 20);
   }
 
   TextStyle get fontCaption {
-    return copyWith(
-      fontSize: 12,
-      height: 12 / 10,
-    );
+    return copyWith(fontSize: 12, height: 12 / 10);
   }
 
   TextStyle get semibold {

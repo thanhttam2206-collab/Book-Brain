@@ -1,6 +1,6 @@
 import 'base_response.dart';
 
-class SearchBookResponse extends BaseResponse{
+class SearchBookResponse extends BaseResponse {
   SearchBookResponse({
     required this.bookId,
     required this.title,
@@ -29,7 +29,7 @@ class SearchBookResponse extends BaseResponse{
   final int? categoryId;
   final String? categoryName;
 
-  factory SearchBookResponse.fromJson(Map<String, dynamic> json){
+  factory SearchBookResponse.fromJson(Map<String, dynamic> json) {
     return SearchBookResponse(
       bookId: json["book_id"],
       title: json["title"],
@@ -62,7 +62,7 @@ class SearchBookResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $title, $url, $imageUrl, $excerpt, $views, $status, $rating, $authorId, $authorName, $categoryId, $categoryName, ";
   }
 }

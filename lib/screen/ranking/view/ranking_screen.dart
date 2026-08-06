@@ -1,15 +1,16 @@
 import 'package:book_brain/screen/ranking/provider/ranking_notifier.dart';
 import 'package:book_brain/screen/ranking/widget/ranking_podium_widget.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/utils/core/constants/color_constants.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/constants/mock_data.dart';
 import 'package:book_brain/utils/widget/base_appbar.dart';
 import 'package:book_brain/utils/widget/tab_widget.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/widget/loading_widget.dart';
-import '../../main_app.dart';
 import 'book_ranking_screen.dart';
 
 class RankingScreen extends StatefulWidget {
@@ -44,24 +45,44 @@ class _RankingScreenState extends State<RankingScreen> {
       ),
       body: Stack(
         children: [
-          Tabwidget(
-            tabs: [
-              TabModel(
-                title: Text(
-                  "Tác giả",
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
-                view: Padding(
-                  padding: EdgeInsets.all(kDefaultPadding),
-                  child: RankingPodium(topAuthor: presenter.authRanking ?? []),
+          Column(
+            children: [
+              Expanded(
+                child: Tabwidget(
+                  tabs: [
+                    TabModel(
+                      title: Text(
+                        "Tác giả",
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                      view: Padding(
+                        padding: EdgeInsets.all(kDefaultPadding),
+                        child: RankingPodium(
+                          topAuthor: presenter.authRanking ?? [],
+                        ),
+                      ),
+                    ),
+                    TabModel(
+                      title: Text(
+                        "Sách",
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                      view: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding,
+                        ),
+                        child: BookRankingScreen(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              TabModel(
-                title: Text("Sách", textAlign: TextAlign.center, maxLines: 2),
-                view: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: BookRankingScreen(),
+              const SafeArea(
+                top: false,
+                child: AdaptiveBannerAdWidget(
+                  placement: AdPlacement.rankingAuthorsInline,
                 ),
               ),
             ],

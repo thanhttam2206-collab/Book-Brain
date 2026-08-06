@@ -17,7 +17,7 @@ class NoteResponse {
   final int? endPosition;
   final int? noteId;
 
-  factory NoteResponse.fromJson(Map<String, dynamic> json){
+  factory NoteResponse.fromJson(Map<String, dynamic> json) {
     return NoteResponse(
       bookId: json["bookId"],
       chapterId: json["chapterId"],
@@ -40,7 +40,7 @@ class NoteResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $chapterId, $selectedText, $noteContent, $startPosition, $endPosition, $noteId ";
   }
 }

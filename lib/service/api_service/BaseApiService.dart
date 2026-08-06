@@ -31,7 +31,11 @@ abstract class BaseApiService {
           response = await dio.get(url, queryParameters: data);
       }
 
-      return BaseResponse.fromJson(response.data, (json) => fromJson(json));
+      return _parseResponse<T>(
+        response.data,
+        statusCode: response.statusCode,
+        fromJson: fromJson,
+      );
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
@@ -41,15 +45,40 @@ abstract class BaseApiService {
         );
       }
       if (e.response != null) {
-        return BaseResponse.fromJson(
+        return _parseResponse<T>(
           e.response!.data,
-          (json) => fromJson(json),
+          statusCode: e.response!.statusCode,
+          fromJson: fromJson,
         );
       } else {
         return BaseResponse<T>(error: 'DioError: ${e.message}');
       }
     } catch (e) {
       return BaseResponse<T>(error: 'Unexpected Error: $e');
+    }
+  }
+
+  BaseResponse<T> _parseResponse<T>(
+    dynamic payload, {
+    required T Function(Map<String, dynamic>) fromJson,
+    int? statusCode,
+  }) {
+    try {
+      if (payload is Map) {
+        return BaseResponse<T>.fromJson(
+          Map<String, dynamic>.from(payload),
+          fromJson,
+        );
+      }
+      return BaseResponse<T>(
+        status: statusCode?.toString(),
+        error: payload?.toString() ?? 'Empty server response',
+      );
+    } catch (error) {
+      return BaseResponse<T>(
+        status: statusCode?.toString(),
+        error: 'Invalid server response: $error',
+      );
     }
   }
 }

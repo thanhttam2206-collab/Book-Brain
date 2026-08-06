@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 class ImageHelper {
   static Widget loadFromAsset(
-      String imageFilePath, {
-        double? width,
-        double? height,
-        BorderRadius? radius,
-        BoxFit? fit,
-        Color? tintColor,
-        Alignment? alignment,
-      }) {
+    String imageFilePath, {
+    double? width,
+    double? height,
+    BorderRadius? radius,
+    BoxFit? fit,
+    Color? tintColor,
+    Alignment? alignment,
+  }) {
     return ClipRRect(
       borderRadius: radius ?? BorderRadius.zero,
       child: Image.asset(
@@ -20,6 +21,5 @@ class ImageHelper {
         alignment: alignment ?? Alignment.center,
       ),
     );
-
   }
 }

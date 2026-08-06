@@ -4,8 +4,8 @@ import 'package:book_brain/screen/search_screen/view/search_screen.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
-import 'package:book_brain/widgets/ad_banner_widget.dart';
-import 'package:book_brain/widgets/native_ad_widget.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -124,42 +124,49 @@ class _SearchScreenState extends State<SearchScreen> {
               horizontal: kMediumPadding,
               vertical: 16,
             ),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo is ScrollEndNotification) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    // Khi cuộn đến cuối trang
-                    final searchNotifier = Provider.of<SearchNotifier>(
-                      context,
-                      listen: false,
-                    );
-                    searchNotifier.loadMore();
-                  }
-                }
-                return true;
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (recentSearches.isNotEmpty) ...[
-                      _buildRecentSearches(),
-                      SizedBox(height: 20),
-                    ],
+            child: Column(
+              children: [
+                Expanded(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo is ScrollEndNotification &&
+                          scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
+                        Provider.of<SearchNotifier>(
+                          context,
+                          listen: false,
+                        ).loadMore();
+                      }
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (recentSearches.isNotEmpty) ...[
+                            _buildRecentSearches(),
+                            SizedBox(height: 20),
+                          ],
 
-                    _buildPopularCategories(),
-                    SizedBox(height: 20),
+                          _buildPopularCategories(),
+                          SizedBox(height: 20),
 
-                    _buildTrendingBooks(),
+                          _buildTrendingBooks(),
 
-                    SizedBox(height: 20),
-
-
-                    Center(child: AdBannerWidget()),
-                  ],
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                if (MediaQuery.viewInsetsOf(context).bottom == 0)
+                  const SafeArea(
+                    top: false,
+                    child: AdaptiveBannerAdWidget(
+                      placement: AdPlacement.searchLandingFooter,
+                    ),
+                  ),
+              ],
             ),
           ),
         ],

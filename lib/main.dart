@@ -23,10 +23,15 @@ void main() async {
   await Hive.initFlutter();
   await LocalStorageHelper.initLocalStorageHelper();
 
-  // Temporarily disable ads for the current iOS release submitted to Apple.
-  // Remove this override when ads are ready to be enabled on iOS.
-  if (defaultTargetPlatform == TargetPlatform.iOS) {
-    LocalStorageHelper.setValue('isAds', 'off');
+  // Remove the legacy iOS-only override once. From this point on, the server
+  // value stored after login is the single source of truth for every platform.
+  const iosAdsOverrideMigrationKey = 'ios_ads_override_removed_v1';
+  if (defaultTargetPlatform == TargetPlatform.iOS &&
+      LocalStorageHelper.getValue(iosAdsOverrideMigrationKey) != true) {
+    if (LocalStorageHelper.getValue('isAds') == 'off') {
+      await LocalStorageHelper.deleteValue('isAds');
+    }
+    await LocalStorageHelper.setValue(iosAdsOverrideMigrationKey, true);
   }
   // await dotenv.load(fileName: ".env");
 

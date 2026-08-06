@@ -9,9 +9,7 @@ abstract class IReviewBookInterface {
     required int limit,
   });
 
-  Future<ReviewStatsResponse?> getStatsReview({
-    required int bookId,
-  });
+  Future<ReviewStatsResponse?> getStatsReview({required int bookId});
 
   Future<bool> createReview({
     required int bookId,
@@ -19,7 +17,5 @@ abstract class IReviewBookInterface {
     required String comment,
   });
 
-  Future<bool> deleteReview({
-    required int reviewId,
-  });
+  Future<bool> deleteReview({required int reviewId});
 }

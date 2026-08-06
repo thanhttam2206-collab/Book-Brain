@@ -1,4 +1,5 @@
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
 import 'package:book_brain/service/api_service/response/book_info_response.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/constants/textstyle_ext.dart'
@@ -119,10 +120,10 @@ class HorizontalBookList extends StatelessWidget {
               final book = displayBooks[index];
               return InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PreviewScreen(bookId: book.bookId),
-                    ),
+                  BookNavigationAdHelper.openBookPreviewWithAd(
+                    context: context,
+                    bookId: book.bookId ?? 1,
+                    sourcePlacement: AdPlacement.contentNavigationInterstitial,
                   );
                 },
                 child: BookItem(

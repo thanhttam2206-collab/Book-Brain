@@ -19,22 +19,18 @@ class Utils {
     if (rating == null) return null;
 
     try {
-      
       final parts = rating.split('/');
       if (parts.length != 2) return null;
 
-      
       final ratingValue = double.tryParse(parts[0]);
       if (ratingValue == null) return null;
 
-      
       final convertedValue = (ratingValue / 2).toStringAsFixed(1);
       return "$convertedValue/5";
     } catch (e) {
       return null;
     }
   }
-
 
   static String formatDate(DateTime? date) {
     if (date == null) return "N/A";
@@ -45,7 +41,6 @@ class Utils {
       return "N/A";
     }
   }
-
 
   static int convertCompletionRate(String rateStr) {
     try {
@@ -63,8 +58,7 @@ class Utils {
     }
   }
 
-
- static String convertToFormattedDate(String isoDateString) {
+  static String convertToFormattedDate(String isoDateString) {
     try {
       DateTime dateTime = DateTime.parse(isoDateString);
 
@@ -75,7 +69,7 @@ class Utils {
     }
   }
 
- static String twoDigitFormat(int number) {
+  static String twoDigitFormat(int number) {
     return number.toString().padLeft(2, '0');
   }
 }

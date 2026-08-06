@@ -101,10 +101,15 @@ class _BottomSheetSelectorState extends State<BottomSheetSelector> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.selectedValue.isNotEmpty ? widget.selectedValue : widget.placeholder,
+                    widget.selectedValue.isNotEmpty
+                        ? widget.selectedValue
+                        : widget.placeholder,
                     style: TextStyle(
                       fontSize: 16,
-                      color: widget.selectedValue.isNotEmpty ? Colors.black : Colors.grey,
+                      color:
+                          widget.selectedValue.isNotEmpty
+                              ? Colors.black
+                              : Colors.grey,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -181,9 +186,12 @@ class _SelectionBottomSheetState extends State<_SelectionBottomSheet> {
       if (query.isEmpty) {
         _filteredItems = List.from(widget.items);
       } else {
-        _filteredItems = widget.items
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+        _filteredItems =
+            widget.items
+                .where(
+                  (item) => item.toLowerCase().contains(query.toLowerCase()),
+                )
+                .toList();
       }
     });
   }
@@ -211,10 +219,7 @@ class _SelectionBottomSheetState extends State<_SelectionBottomSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
               widget.title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(height: 16),
@@ -248,8 +253,10 @@ class _SelectionBottomSheetState extends State<_SelectionBottomSheet> {
 
                 // Xác định mức độ thụt lề dựa trên số lượng dấu "-" ở đầu
                 int indentLevel = 0;
-                if (item.startsWith("--")) indentLevel = 2;
-                else if (item.startsWith("-")) indentLevel = 1;
+                if (item.startsWith("--"))
+                  indentLevel = 2;
+                else if (item.startsWith("-"))
+                  indentLevel = 1;
 
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 2),

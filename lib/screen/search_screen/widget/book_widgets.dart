@@ -1,12 +1,7 @@
 import 'package:book_brain/service/api_service/response/search_book_response.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
-import 'package:book_brain/widgets/native_ad_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:book_brain/screen/search_screen/provider/search_notifier.dart';
-import 'package:book_brain/utils/core/constants/dimension_constants.dart';
-import 'package:book_brain/utils/core/helpers/image_helper.dart';
-import 'package:book_brain/widgets/ad_banner_widget.dart';
 
 class BooksGridView extends StatelessWidget {
   final List<SearchBookResponse> books;
@@ -24,18 +19,7 @@ class BooksGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Tạo danh sách item (2 sách 1 hàng)
     List<Widget> rows = [];
-    int adInterval = 6;
-    int count = 0;
     for (int i = 0; i < books.length; i += 2) {
-      // Chèn NativeAd sau mỗi 6 sách
-      if (count > 0 && count % adInterval == 0) {
-        rows.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: NativeAdWidget(),
-          ),
-        );
-      }
       List<Widget> rowChildren = [];
       rowChildren.add(
         Expanded(
@@ -65,7 +49,6 @@ class BooksGridView extends StatelessWidget {
         ),
       );
       rows.add(SizedBox(height: 16));
-      count += 2;
     }
     return ListView(
       controller: scrollController,
@@ -82,7 +65,6 @@ class BookGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int rate = int.tryParse((book.rating ?? '10/10').split('/')[0]) ?? 4;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -173,22 +155,9 @@ class BooksListView extends StatelessWidget {
     return ListView.builder(
       controller: scrollController,
       padding: EdgeInsets.only(bottom: 16),
-      itemCount: books.length + (books.length ~/ 6), // Thêm số lượng banner ads
+      itemCount: books.length,
       itemBuilder: (context, index) {
-        // Tính toán index thực tế cho books sau khi đã thêm ads
-        int actualIndex = index - (index ~/ 7);
-
-        // Hiển thị banner ads sau mỗi 6 items
-        if (index > 0 && index % 7 == 6) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: NativeAdWidget(),
-          );
-        }
-
-        if (actualIndex >= books.length) return SizedBox.shrink();
-
-        final book = books[actualIndex];
+        final book = books[index];
         return GestureDetector(
           onTap: () => onTap(book),
           child: BookListItem(book: book),
@@ -205,7 +174,6 @@ class BookListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int rate = int.tryParse((book.rating ?? '10/10').split('/')[0]) ?? 4;
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(

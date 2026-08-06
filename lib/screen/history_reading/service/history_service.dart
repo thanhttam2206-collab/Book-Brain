@@ -17,9 +17,16 @@ class HistoryService implements IHistoryInterface {
   final ApiServices apiServices = ApiServices();
 
   @override
-  Future<List<HistoryResponse>?> getHistory({String? status, required int page, required int limit}) async {
-    final BaseResponse<HistoryResponse> response = await apiServices
-        .getHistory(status: status, page: page, limit: limit);
+  Future<List<HistoryResponse>?> getHistory({
+    String? status,
+    required int page,
+    required int limit,
+  }) async {
+    final BaseResponse<HistoryResponse> response = await apiServices.getHistory(
+      status: status,
+      page: page,
+      limit: limit,
+    );
     if (response.code != null) {
       List<HistoryResponse> data = response.data!;
       return data;
@@ -28,7 +35,13 @@ class HistoryService implements IHistoryInterface {
   }
 
   @override
-  Future<bool?> updateHistory({required int bookId, required String readingStatus, required double completionRate, required String notes, required int currentChapterId}) async{
+  Future<bool?> updateHistory({
+    required int bookId,
+    required String readingStatus,
+    required double completionRate,
+    required String notes,
+    required int currentChapterId,
+  }) async {
     final UpdateHistoryRequest request = UpdateHistoryRequest(
       bookId: bookId,
       readingStatus: readingStatus,

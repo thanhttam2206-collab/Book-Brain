@@ -12,11 +12,7 @@ import 'ranking_empty_state.dart';
 class RankingPodium extends StatelessWidget {
   final List<AuthorRankingResponse> topAuthor;
 
-  const RankingPodium({
-    Key? key,
-    required this.topAuthor,
-  }) : super(key: key);
-
+  const RankingPodium({Key? key, required this.topAuthor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +31,6 @@ class RankingPodium extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.8,
       child: Stack(
         children: [
-
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -45,14 +40,11 @@ class RankingPodium extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
-
                 SizedBox(
                   height: height_420,
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [
-
                       Positioned(
                         left: 20,
                         bottom: height_100,
@@ -62,7 +54,6 @@ class RankingPodium extends StatelessWidget {
                         ),
                       ),
 
-
                       Positioned(
                         bottom: 60.h,
                         child: _buildPositionColumn(
@@ -71,7 +62,6 @@ class RankingPodium extends StatelessWidget {
                           isCrowned: true,
                         ),
                       ),
-
 
                       Positioned(
                         right: 20,
@@ -88,7 +78,6 @@ class RankingPodium extends StatelessWidget {
             ),
           ),
 
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Align(
@@ -99,12 +88,14 @@ class RankingPodium extends StatelessWidget {
                 maxChildSize: 1,
                 snap: true,
 
-                builder: (BuildContext context, ScrollController scrollController) {
+                builder: (
+                  BuildContext context,
+                  ScrollController scrollController,
+                ) {
                   return Stack(
                     alignment: Alignment.topCenter,
                     clipBehavior: Clip.none,
                     children: [
-
                       Container(
                         padding: EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
@@ -126,23 +117,31 @@ class RankingPodium extends StatelessWidget {
                           children: [
                             const SizedBox(height: 10),
 
-
                             Expanded(
-                              child: topAuthor != null && topAuthor.isNotEmpty
-                                  ? ListView.builder(
-                                controller: scrollController,
-                                padding: EdgeInsets.all(kDefaultPadding),
-                                itemCount: topAuthor.length,
-                                itemBuilder: (context, index) {
-                                  return _buildRankingListItem(topAuthor![index], index);
-                                },
-                              )
-                                  : Center(child: Text("Không có dữ liệu xếp hạng khác")),
+                              child:
+                                  topAuthor != null && topAuthor.isNotEmpty
+                                      ? ListView.builder(
+                                        controller: scrollController,
+                                        padding: EdgeInsets.all(
+                                          kDefaultPadding,
+                                        ),
+                                        itemCount: topAuthor.length,
+                                        itemBuilder: (context, index) {
+                                          return _buildRankingListItem(
+                                            topAuthor[index],
+                                            index,
+                                          );
+                                        },
+                                      )
+                                      : Center(
+                                        child: Text(
+                                          "Không có dữ liệu xếp hạng khác",
+                                        ),
+                                      ),
                             ),
                           ],
                         ),
                       ),
-
 
                       Positioned(
                         top: -2.5,
@@ -155,7 +154,6 @@ class RankingPodium extends StatelessWidget {
                           ),
                         ),
                       ),
-
 
                       Positioned(
                         top: -15,
@@ -199,6 +197,7 @@ class RankingPodium extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildPositionColumn({
     required AuthorRankingResponse author,
     required int position,
@@ -207,7 +206,6 @@ class RankingPodium extends StatelessWidget {
     Color avatarColor = getColorFromName(author.name ?? "");
     String initials = getInitials(author.name ?? "");
     double avatarSize = position == 1 ? 80 : 70;
-
 
     double podiumHeight;
     switch (position) {
@@ -224,7 +222,6 @@ class RankingPodium extends StatelessWidget {
         podiumHeight = 150;
     }
 
-
     String rankImage;
     switch (position) {
       case 1:
@@ -240,17 +237,12 @@ class RankingPodium extends StatelessWidget {
         rankImage = AssetHelper.rank1;
     }
 
-
-
     String displayName = author.name ?? "";
     if (displayName.length > 12) {
-
       List<String> nameParts = displayName.split(' ');
 
       if (nameParts.length > 1) {
-
         String lastName = nameParts.last;
-
 
         StringBuffer initialsBuffer = StringBuffer();
         for (int i = 0; i < nameParts.length - 1; i++) {
@@ -260,7 +252,6 @@ class RankingPodium extends StatelessWidget {
           }
         }
 
-
         displayName = '${initialsBuffer.toString()} $lastName';
       }
     }
@@ -268,17 +259,18 @@ class RankingPodium extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-
         Stack(
           clipBehavior: Clip.none,
           children: [
-
             CircleAvatar(
               radius: avatarSize / 2,
               backgroundColor: avatarColor,
-              child: Icon(Icons.person, size: avatarSize * 0.6, color: Colors.white),
+              child: Icon(
+                Icons.person,
+                size: avatarSize * 0.6,
+                color: Colors.white,
+              ),
             ),
-
 
             if (isCrowned)
               Positioned(
@@ -294,7 +286,6 @@ class RankingPodium extends StatelessWidget {
                 ),
               ),
 
-
             Positioned(
               bottom: 0,
               right: -5,
@@ -302,7 +293,7 @@ class RankingPodium extends StatelessWidget {
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color:  Colors.grey,
+                  color: Colors.grey,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
@@ -312,7 +303,6 @@ class RankingPodium extends StatelessWidget {
         ),
 
         SizedBox(height: 8),
-
 
         Container(
           width: position == 1 ? 100 : 80,
@@ -331,7 +321,6 @@ class RankingPodium extends StatelessWidget {
 
         SizedBox(height: 4),
 
-
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
@@ -340,15 +329,11 @@ class RankingPodium extends StatelessWidget {
           ),
           child: Text(
             author.authorScore.toString(),
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
 
         SizedBox(height: 16),
-
 
         ImageHelper.loadFromAsset(
           rankImage,
@@ -358,7 +343,6 @@ class RankingPodium extends StatelessWidget {
       ],
     );
   }
-
 
   Widget _buildRankingListItem(AuthorRankingResponse author, int index) {
     Color avatarColor = getColorFromName(author.name ?? "");
@@ -379,7 +363,6 @@ class RankingPodium extends StatelessWidget {
       ),
       child: Row(
         children: [
-
           Container(
             width: 30,
             height: 30,
@@ -398,7 +381,6 @@ class RankingPodium extends StatelessWidget {
           ),
           SizedBox(width: 12),
 
-
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -408,7 +390,6 @@ class RankingPodium extends StatelessWidget {
                 child: Icon(Icons.person, color: Colors.white),
               ),
 
-
               Positioned(
                 bottom: 0,
                 right: -5,
@@ -416,7 +397,7 @@ class RankingPodium extends StatelessWidget {
                   width: 16,
                   height: 16,
                   decoration: BoxDecoration(
-                    color:  Colors.grey,
+                    color: Colors.grey,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                   ),
@@ -427,25 +408,18 @@ class RankingPodium extends StatelessWidget {
 
           SizedBox(width: 12),
 
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   author.name ?? "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(height: 2),
                 Text(
                   author.authorScore.toString(),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                 ),
               ],
             ),

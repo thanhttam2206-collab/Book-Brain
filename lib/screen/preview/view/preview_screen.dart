@@ -4,6 +4,7 @@ import 'package:book_brain/screen/detail_book/widget/bottom_sheet_selector.dart'
 import 'package:book_brain/screen/login/widget/button_widget.dart';
 import 'package:book_brain/screen/preview/provider/preview_notifier.dart';
 import 'package:book_brain/screen/reivew_book/view/review_book_screen.dart';
+import 'package:book_brain/service/ads/chapter_ad_gate.dart';
 import 'package:book_brain/utils/core/constants/color_constants.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/constants/mock_data.dart';
@@ -13,22 +14,19 @@ import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/auth_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
-import 'package:book_brain/widgets/native_ad_widget.dart';
+import 'package:book_brain/widgets/ads/chapter_reward_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:book_brain/service/service_config/admob_service.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:book_brain/utils/core/helpers/local_storage_helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../utils/widget/loading_widget.dart';
 
 class PreviewScreen extends StatefulWidget {
-  PreviewScreen({super.key, this.bookId});
+  const PreviewScreen({super.key, this.bookId});
   static const String routeName = '/preview_screen';
 
-  int? bookId;
+  final int? bookId;
   @override
   State<PreviewScreen> createState() => _PreviewScreenState();
 }
@@ -36,8 +34,7 @@ class PreviewScreen extends StatefulWidget {
 class _PreviewScreenState extends State<PreviewScreen> {
   String _selectedChapter = "";
   late int chapterNumber;
-  bool _isRewardedLoading = false;
-  int? _pendingChapterNumber;
+  bool _isChapterRequestInProgress = false;
 
   @override
   void initState() {
@@ -59,132 +56,49 @@ class _PreviewScreenState extends State<PreviewScreen> {
     _selectedChapter = "";
   }
 
-  Future<void> _showRewardedInterstitialAdAndContinue(
-    int chapterNumber,
-    int bookId,
-  ) async {
-    String isAds = LocalStorageHelper.getValue("isAds");
-    if (isAds == 'off') {
-      _onRewardedAdCompleted(bookId);
-      return;
-    }
-
-    setState(() {
-      _isRewardedLoading = true;
-      _pendingChapterNumber = chapterNumber;
-    });
-
-    int retryCount = 0;
-    const maxRetries = 3;
-    bool isAdLoaded = false;
-
-    while (retryCount < maxRetries && !isAdLoaded) {
-      try {
-        if (retryCount > 0) {
-          await Future.delayed(Duration(seconds: 2));
-        }
-
-        await RewardedInterstitialAd.load(
-          adUnitId: AdMobService().getAdUnitId('rewarded_interstitial'),
-          request: const AdRequest(),
-          rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              isAdLoaded = true;
-              ad.fullScreenContentCallback = FullScreenContentCallback(
-                onAdDismissedFullScreenContent: (ad) {
-                  if (_pendingChapterNumber != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Bạn cần xem hết quảng cáo để tiếp tục đọc chương tiếp theo!',
-                        ),
-                      ),
-                    );
-                    setState(() {
-                      _isRewardedLoading = false;
-                    });
-                  }
-                  ad.dispose();
-                },
-                onAdFailedToShowFullScreenContent: (ad, error) {
-                  print('Ad failed to show: $error');
-                  ad.dispose();
-                  setState(() {
-                    _isRewardedLoading = false;
-                  });
-                  if (retryCount < maxRetries) {
-                    retryCount++;
-                    isAdLoaded = false;
-                  }
-                },
-              );
-
-              Future.delayed(Duration(milliseconds: 500), () {
-                if (mounted) {
-                  ad.show(
-                    onUserEarnedReward: (_, reward) {
-                      _onRewardedAdCompleted(bookId);
-                      ad.dispose();
-                    },
-                  );
-                }
-              });
-
-              setState(() {
-                _isRewardedLoading = false;
-              });
-            },
-            onAdFailedToLoad: (error) {
-              print('Ad failed to load: $error');
-              retryCount++;
-              if (retryCount >= maxRetries) {
-                setState(() {
-                  _isRewardedLoading = false;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Không thể tải quảng cáo, vui lòng thử lại sau!',
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        );
-      } catch (e) {
-        print('Error loading ad: $e');
-        retryCount++;
-        if (retryCount >= maxRetries) {
-          setState(() {
-            _isRewardedLoading = false;
-          });
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Có lỗi khi tải quảng cáo!')));
-        }
+  Future<void> _requestChapterAccess(int bookId) async {
+    if (_isChapterRequestInProgress) return;
+    setState(() => _isChapterRequestInProgress = true);
+    var consentedToRewarded = false;
+    if (ChapterAdGate.instance.requiresReward(
+      bookId: bookId,
+      chapterNumber: chapterNumber,
+    )) {
+      consentedToRewarded = await showChapterRewardPrompt(context);
+      if (!mounted) return;
+      if (!consentedToRewarded) {
+        setState(() => _isChapterRequestInProgress = false);
+        return;
       }
     }
-  }
-
-  void _onRewardedAdCompleted(int bookId) {
-    final int? chapterToOpen = _pendingChapterNumber ?? chapterNumber;
-    if (chapterToOpen != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder:
-              (context) =>
-                  DetailBookScreen(bookId: bookId, chapterId: chapterToOpen),
+    final result = await ChapterAdGate.instance.requestAccess(
+      bookId: bookId,
+      chapterNumber: chapterNumber,
+      userConsentedToRewarded: consentedToRewarded,
+    );
+    if (!mounted) return;
+    if (result == ChapterAccessResult.temporarilyGrantedAfterAdFailure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Không thể tải quảng cáo. Bạn có thể tiếp tục đọc chương này.',
+          ),
         ),
       );
-      setState(() {
-        _pendingChapterNumber = null;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Không xác định được chương để mở!')),
+    }
+    if (result != ChapterAccessResult.denied) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder:
+              (_) => DetailBookScreen(
+                bookId: bookId,
+                chapterId: chapterNumber,
+                accessAlreadyGranted: true,
+              ),
+        ),
       );
     }
+    if (mounted) setState(() => _isChapterRequestInProgress = false);
   }
 
   @override
@@ -513,9 +427,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                                   },
                                   placeholder: 'Vui lòng chọn chương sách',
                                 ),
-
-                                SizedBox(height: kMediumPadding),
-                                NativeAdWidget(),
                               ],
                             ),
                           ),
@@ -532,32 +443,18 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 color: Colors.white,
                 child: ButtonWidget(
                   title: 'Bắt đầu đọc',
-                  ontap: () {
-                    print("======> $chapterNumber");
-                    String isAds = LocalStorageHelper.getValue("isAds");
-                    if (chapterNumber < 3 || isAds == 'off') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (context) => DetailBookScreen(
-                                bookId: presenter.bookDetail?.bookId ?? 1,
-                                chapterId: chapterNumber,
-                              ),
-                        ),
-                      );
-                    } else {
-                      _showRewardedInterstitialAdAndContinue(
-                        chapterNumber,
-                        presenter.bookDetail?.bookId ?? 1,
-                      );
-                    }
-                  },
+                  ontap:
+                      _isChapterRequestInProgress
+                          ? null
+                          : () => _requestChapterAccess(
+                            presenter.bookDetail?.bookId ?? 1,
+                          ),
                 ),
               ),
             ],
           ),
           presenter.isLoading ? const LoadingWidget() : const SizedBox(),
-          if (_isRewardedLoading)
+          if (_isChapterRequestInProgress)
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.3),

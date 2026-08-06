@@ -1,7 +1,8 @@
 import 'package:book_brain/screen/detail_book/view/detail_book_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:book_brain/screen/history_reading/provider/history_notifier.dart';
 import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
 import 'package:book_brain/service/api_service/response/history_response.dart';
 import 'package:book_brain/utils/core/helpers/network_image_handler.dart';
 import 'package:book_brain/utils/core/helpers/auth_helper.dart';
@@ -143,6 +144,9 @@ class _HistoryReadingScreenState extends State<HistoryReadingScreen> {
                       _buildFinishedReading(presenter.completedHistory),
                     ],
                   ),
+                ),
+                const AdaptiveBannerAdWidget(
+                  placement: AdPlacement.historyInline,
                 ),
               ],
             ),

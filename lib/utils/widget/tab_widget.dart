@@ -15,8 +15,8 @@ class Tabwidget extends StatefulWidget {
   final int initialIndex;
   final Color activeColor;
   final Color inactiveColor;
-  final Color textActiveColor;    // Màu chữ khi tab được chọn
-  final Color textInactiveColor;  // Màu chữ khi tab không được chọn
+  final Color textActiveColor; // Màu chữ khi tab được chọn
+  final Color textInactiveColor; // Màu chữ khi tab không được chọn
   final Color backgroundColor;
 
   const Tabwidget({
@@ -25,8 +25,9 @@ class Tabwidget extends StatefulWidget {
     this.initialIndex = 0,
     this.activeColor = ColorPalette.color9087E5,
     this.inactiveColor = ColorPalette.color6A5AE0,
-    this.textActiveColor = Colors.white,           // Màu chữ khi tab được chọn
-    this.textInactiveColor = ColorPalette.colorB9B4E4,       // Màu chữ khi tab không được chọn
+    this.textActiveColor = Colors.white, // Màu chữ khi tab được chọn
+    this.textInactiveColor =
+        ColorPalette.colorB9B4E4, // Màu chữ khi tab không được chọn
     this.backgroundColor = ColorPalette.color6A5AE0,
   }) : super(key: key);
 
@@ -34,7 +35,8 @@ class Tabwidget extends StatefulWidget {
   State<Tabwidget> createState() => _TabwidgetState();
 }
 
-class _TabwidgetState extends State<Tabwidget> with SingleTickerProviderStateMixin {
+class _TabwidgetState extends State<Tabwidget>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -68,8 +70,9 @@ class _TabwidgetState extends State<Tabwidget> with SingleTickerProviderStateMix
           child: TabBar(
             controller: _tabController,
             tabs: widget.tabs.map((tab) => Tab(child: tab.title)).toList(),
-            labelColor: widget.textActiveColor,         // Màu chữ khi tab được chọn
-            unselectedLabelColor: widget.textInactiveColor,  // Màu chữ khi tab không được chọn
+            labelColor: widget.textActiveColor, // Màu chữ khi tab được chọn
+            unselectedLabelColor:
+                widget.textInactiveColor, // Màu chữ khi tab không được chọn
             indicator: BoxDecoration(
               color: widget.activeColor,
               borderRadius: BorderRadius.circular(30),

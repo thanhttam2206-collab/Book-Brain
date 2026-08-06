@@ -1,6 +1,6 @@
 import 'package:book_brain/service/api_service/response/base_response.dart';
 
-class FavoritesResponse extends BaseResponse{
+class FavoritesResponse extends BaseResponse {
   FavoritesResponse({
     required this.bookId,
     required this.title,
@@ -31,7 +31,7 @@ class FavoritesResponse extends BaseResponse{
   final String? categoryName;
   final DateTime? addedAt;
 
-  factory FavoritesResponse.fromJson(Map<String, dynamic> json){
+  factory FavoritesResponse.fromJson(Map<String, dynamic> json) {
     return FavoritesResponse(
       bookId: json["book_id"],
       title: json["title"],
@@ -66,7 +66,7 @@ class FavoritesResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $title, $url, $imageUrl, $excerpt, $views, $status, $rating, $authorId, $authorName, $categoryId, $categoryName, $addedAt, ";
   }
 }

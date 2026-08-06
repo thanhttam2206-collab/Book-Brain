@@ -2,7 +2,7 @@ import 'package:book_brain/screen/login/model/user_model.dart';
 
 import 'base_response.dart';
 
-class LoginResponse extends BaseResponse{
+class LoginResponse extends BaseResponse {
   final String key;
   final dynamic value;
 
@@ -12,9 +12,10 @@ class LoginResponse extends BaseResponse{
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
       key: json['key'] as String,
-      value: json['key'] == 'UserModel'
-          ? UserModel.fromJson(json['value'])
-          : json['value'],
+      value:
+          json['key'] == 'UserModel'
+              ? UserModel.fromJson(json['value'])
+              : json['value'],
     );
   }
 

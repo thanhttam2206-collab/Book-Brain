@@ -22,7 +22,7 @@ class PreviewService implements IPreviewInterface {
   }
 
   @override
-  Future<List<ChaptersResponse>?> getChapters({required int bookId}) async{
+  Future<List<ChaptersResponse>?> getChapters({required int bookId}) async {
     final BaseResponse<ChaptersResponse> response = await apiServices
         .getChapters(bookId: bookId);
     if (response.code != null) {

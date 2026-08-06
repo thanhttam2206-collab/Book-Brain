@@ -7,7 +7,5 @@ abstract class IPreviewInterface {
     required int chapterId,
   });
 
-  Future<List<ChaptersResponse>?> getChapters({
-    required int bookId,
-  });
+  Future<List<ChaptersResponse>?> getChapters({required int bookId});
 }

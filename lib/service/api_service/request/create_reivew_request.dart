@@ -9,7 +9,7 @@ class CreateReviewRequest {
   final int? rating;
   final String? comment;
 
-  factory CreateReviewRequest.fromJson(Map<String, dynamic> json){
+  factory CreateReviewRequest.fromJson(Map<String, dynamic> json) {
     return CreateReviewRequest(
       bookId: json["book_id"],
       rating: json["rating"],
@@ -24,7 +24,7 @@ class CreateReviewRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $rating, $comment, ";
   }
 }

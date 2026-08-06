@@ -15,7 +15,7 @@ class CreateSubscriptionsResponse extends BaseResponse {
   final bool? isActive;
   final DateTime? subscribedAt;
 
-  factory CreateSubscriptionsResponse.fromJson(Map<String, dynamic> json){
+  factory CreateSubscriptionsResponse.fromJson(Map<String, dynamic> json) {
     return CreateSubscriptionsResponse(
       subscriptionId: json["subscription_id"],
       userId: json["user_id"],
@@ -34,7 +34,7 @@ class CreateSubscriptionsResponse extends BaseResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$subscriptionId, $userId, $bookId, $isActive, $subscribedAt, ";
   }
 }

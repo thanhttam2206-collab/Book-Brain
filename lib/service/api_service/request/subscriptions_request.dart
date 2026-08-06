@@ -2,14 +2,14 @@ class SubscriptionsRequest {
   SubscriptionsRequest({
     required this.bookId,
     required this.action,
-     this.notificationMethod,
+    this.notificationMethod,
   });
 
   final int? bookId;
   final String? action;
   final String? notificationMethod;
 
-  factory SubscriptionsRequest.fromJson(Map<String, dynamic> json){
+  factory SubscriptionsRequest.fromJson(Map<String, dynamic> json) {
     return SubscriptionsRequest(
       bookId: json["book_id"],
       action: json["action"],
@@ -24,7 +24,7 @@ class SubscriptionsRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $action, $notificationMethod, ";
   }
 }

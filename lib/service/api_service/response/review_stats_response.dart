@@ -1,6 +1,6 @@
 import 'package:book_brain/service/api_service/response/base_response.dart';
 
-class ReviewStatsResponse extends BaseResponse{
+class ReviewStatsResponse extends BaseResponse {
   ReviewStatsResponse({
     required this.totalReviews,
     required this.averageRating,
@@ -19,7 +19,7 @@ class ReviewStatsResponse extends BaseResponse{
   final String? twoStar;
   final String? oneStar;
 
-  factory ReviewStatsResponse.fromJson(Map<String, dynamic> json){
+  factory ReviewStatsResponse.fromJson(Map<String, dynamic> json) {
     return ReviewStatsResponse(
       totalReviews: json["total_reviews"],
       averageRating: json["average_rating"],
@@ -42,7 +42,7 @@ class ReviewStatsResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$totalReviews, $averageRating, $fiveStar, $fourStar, $threeStar, $twoStar, $oneStar, ";
   }
 }
