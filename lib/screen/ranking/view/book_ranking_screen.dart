@@ -1,4 +1,7 @@
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
+import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/extentions/size_extension.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
@@ -29,7 +32,6 @@ class _BookRankingScreenState extends State<BookRankingScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final presenter = Provider.of<RankingNotifier>(context);
@@ -51,13 +53,35 @@ class _BookRankingScreenState extends State<BookRankingScreen> {
                 message: 'ranking.empty_book_message'.tr(),
               )
               : ListView.builder(
-                itemCount: presenter.bookRanking!.length,
+                itemCount: InlineAdListHelper.getDisplayItemCount(
+                  presenter.bookRanking!.length,
+                ),
                 itemBuilder: (context, index) {
+                  if (InlineAdListHelper.isAdDisplayIndex(
+                    index,
+                    presenter.bookRanking!.length,
+                  )) {
+                    return const NativeBookAdWidget(
+                      placement: AdPlacement.rankingBooksInline,
+                    );
+                  }
+                  final contentIndex = InlineAdListHelper.getContentIndex(
+                    index,
+                  );
                   return InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PreviewScreen(bookId: presenter.bookRanking?[index].bookId ?? 1,)));
-                      },
-                      child: _bookWidget(index + 1, presenter.bookRanking![index]));
+                    onTap: () {
+                      BookNavigationAdHelper.openBookPreviewWithAd(
+                        context: context,
+                        bookId:
+                            presenter.bookRanking?[contentIndex].bookId ?? 1,
+                        sourcePlacement: AdPlacement.rankingBooksInline,
+                      );
+                    },
+                    child: _bookWidget(
+                      contentIndex + 1,
+                      presenter.bookRanking![contentIndex],
+                    ),
+                  );
                 },
               ),
     );

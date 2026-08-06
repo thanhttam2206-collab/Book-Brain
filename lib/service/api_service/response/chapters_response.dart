@@ -1,6 +1,6 @@
 import 'base_response.dart';
 
-class ChaptersResponse extends BaseResponse{
+class ChaptersResponse extends BaseResponse {
   ChaptersResponse({
     required this.chapterId,
     required this.bookId,
@@ -19,7 +19,7 @@ class ChaptersResponse extends BaseResponse{
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  factory ChaptersResponse.fromJson(Map<String, dynamic> json){
+  factory ChaptersResponse.fromJson(Map<String, dynamic> json) {
     return ChaptersResponse(
       chapterId: json["chapter_id"],
       bookId: json["book_id"],
@@ -42,7 +42,7 @@ class ChaptersResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$chapterId, $bookId, $title, $url, $chapterOrder, $createdAt, $updatedAt, ";
   }
 }

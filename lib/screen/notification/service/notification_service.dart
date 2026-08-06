@@ -13,13 +13,13 @@ import 'package:book_brain/service/api_service/response/notification_response.da
 class NotificationService implements INotificationInterface {
   final ApiServices apiServices = ApiServices();
 
-
   @override
-  Future<bool?> deleteAllNotification() async{
+  Future<bool?> deleteAllNotification() async {
     final DeleteAllNotiRequest request = DeleteAllNotiRequest(
       action: "delete_all",
     );
-    final BaseResponse<DeleteAllNotificaitonResponse> response = await apiServices.sendAllNotification(request);
+    final BaseResponse<DeleteAllNotificaitonResponse> response =
+        await apiServices.sendAllNotification(request);
     if (response.code != null) {
       return true;
     }
@@ -27,12 +27,13 @@ class NotificationService implements INotificationInterface {
   }
 
   @override
-  Future<bool?> deleteNotification({ required int notificationId})async {
+  Future<bool?> deleteNotification({required int notificationId}) async {
     final DeleteNotificationRequest request = DeleteNotificationRequest(
       action: "delete",
       notificationId: notificationId,
     );
-    final BaseResponse<DeleteNotificationResponse> response = await apiServices.sendNotification(request);
+    final BaseResponse<DeleteNotificationResponse> response = await apiServices
+        .sendNotification(request);
     if (response.code != null) {
       return true;
     }
@@ -40,11 +41,12 @@ class NotificationService implements INotificationInterface {
   }
 
   @override
-  Future<bool?> markReaAllNotification() async{
+  Future<bool?> markReaAllNotification() async {
     final DeleteAllNotiRequest request = DeleteAllNotiRequest(
       action: "mark_all_read",
     );
-    final BaseResponse<DeleteAllNotificaitonResponse> response = await apiServices.sendAllNotification(request);
+    final BaseResponse<DeleteAllNotificaitonResponse> response =
+        await apiServices.sendAllNotification(request);
     if (response.code != null) {
       return true;
     }
@@ -52,19 +54,25 @@ class NotificationService implements INotificationInterface {
   }
 
   @override
-  Future<bool?> markReadNotification({required int notificationId}) async{
+  Future<bool?> markReadNotification({required int notificationId}) async {
     final DeleteNotificationRequest request = DeleteNotificationRequest(
       action: "mark_read",
       notificationId: notificationId,
     );
-    final BaseResponse<DeleteNotificationResponse> response = await apiServices.sendNotification(request);
+    final BaseResponse<DeleteNotificationResponse> response = await apiServices
+        .sendNotification(request);
     if (response.code != null) {
       return true;
     }
     return false;
   }
+
   @override
-  Future<List<NotificationResponse>?> getListNotification({required int page, required int limit, required bool unreadOnly}) async{
+  Future<List<NotificationResponse>?> getListNotification({
+    required int page,
+    required int limit,
+    required bool unreadOnly,
+  }) async {
     final BaseResponse<NotificationResponse> response = await apiServices
         .getNotification(page: page, limit: limit, unreadOnly: unreadOnly);
     if (response.code != null) {
@@ -73,6 +81,4 @@ class NotificationService implements INotificationInterface {
     }
     return null;
   }
-
-
 }

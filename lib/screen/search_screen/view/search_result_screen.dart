@@ -1,5 +1,6 @@
 import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
 import 'package:book_brain/screen/search_screen/provider/search_notifier.dart';
 import 'package:book_brain/screen/search_screen/widget/book_widgets.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
@@ -220,13 +221,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 ? BooksGridView(
                                   books: presenter.searchBookResponse,
                                   onTap: (book) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => PreviewScreen(
-                                              bookId: book.bookId,
-                                            ),
-                                      ),
+                                    BookNavigationAdHelper.openBookPreviewWithAd(
+                                      context: context,
+                                      bookId: book.bookId ?? 1,
+                                      sourcePlacement:
+                                          AdPlacement.searchResultsInline,
                                     );
                                   },
                                   scrollController: _scrollController,
@@ -234,13 +233,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 : BooksListView(
                                   books: presenter.searchBookResponse,
                                   onTap: (book) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => PreviewScreen(
-                                              bookId: book.bookId,
-                                            ),
-                                      ),
+                                    BookNavigationAdHelper.openBookPreviewWithAd(
+                                      context: context,
+                                      bookId: book.bookId ?? 1,
+                                      sourcePlacement:
+                                          AdPlacement.searchResultsInline,
                                     );
                                   },
                                   scrollController: _scrollController,

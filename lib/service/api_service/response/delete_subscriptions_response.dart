@@ -1,6 +1,6 @@
 import 'package:book_brain/service/api_service/response/base_response.dart';
 
-class DeleteSubscriptionsResponse extends BaseResponse{
+class DeleteSubscriptionsResponse extends BaseResponse {
   DeleteSubscriptionsResponse({
     required this.subscriptionId,
     required this.userId,
@@ -13,7 +13,7 @@ class DeleteSubscriptionsResponse extends BaseResponse{
   final int? bookId;
   final bool? isActive;
 
-  factory DeleteSubscriptionsResponse.fromJson(Map<String, dynamic> json){
+  factory DeleteSubscriptionsResponse.fromJson(Map<String, dynamic> json) {
     return DeleteSubscriptionsResponse(
       subscriptionId: json["subscription_id"],
       userId: json["user_id"],
@@ -30,7 +30,7 @@ class DeleteSubscriptionsResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$subscriptionId, $userId, $bookId, $isActive, ";
   }
 }

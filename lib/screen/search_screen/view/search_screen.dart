@@ -4,8 +4,8 @@ import 'package:book_brain/screen/search_screen/view/search_screen.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
-import 'package:book_brain/widgets/ad_banner_widget.dart';
-import 'package:book_brain/widgets/native_ad_widget.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -155,8 +155,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
                     SizedBox(height: 20),
 
-
-                    Center(child: AdBannerWidget()),
+                    Center(
+                      child: AdaptiveBannerAdWidget(
+                        placement: AdPlacement.searchLandingFooter,
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -10,21 +10,23 @@ class ForgotPasswordService implements IForgotPasswordInterface {
   final ApiServices apiServices = ApiServices();
 
   @override
-  Future<bool> forgotPassword({required int id, required String oldPassword, required String newPassword}) async{
-    ForgotPasswordRequest request = ForgotPasswordRequest(      id: id,
+  Future<bool> forgotPassword({
+    required int id,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    ForgotPasswordRequest request = ForgotPasswordRequest(
+      id: id,
       oldPassword: oldPassword,
       newPassword: newPassword,
     );
 
-    final BaseResponse<ForgotPasswordResponse> response = await apiServices.forgotPassword(
-      request,
-    );
+    final BaseResponse<ForgotPasswordResponse> response = await apiServices
+        .forgotPassword(request);
 
     if (response.code != null) {
       if (response.code == 200 || response.code == 201) {
-        showToastTop(
-          message: response.message.toString(),
-        );
+        showToastTop(message: response.message.toString());
         return true;
       } else {
         showToast(

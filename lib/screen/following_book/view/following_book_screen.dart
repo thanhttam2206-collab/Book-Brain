@@ -1,6 +1,9 @@
 import 'package:book_brain/screen/following_book/provider/subscription_notifier.dart';
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
 import 'package:book_brain/service/api_service/response/subscriptions_response.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
+import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/image_helper.dart';
@@ -284,9 +287,14 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
         crossAxisSpacing: 16,
         childAspectRatio: 0.65,
       ),
-      itemCount: books.length,
+      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
       itemBuilder: (context, index) {
-        return _buildGridItem(books[index]);
+        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
+          return const NativeBookAdWidget(
+            placement: AdPlacement.followingInline,
+          );
+        }
+        return _buildGridItem(books[InlineAdListHelper.getContentIndex(index)]);
       },
     );
   }
@@ -294,9 +302,14 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
   Widget _buildListView(List<SubscriptionsResponse> books) {
     return ListView.builder(
       padding: EdgeInsets.all(16),
-      itemCount: books.length,
+      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
       itemBuilder: (context, index) {
-        return _buildListItem(books[index]);
+        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
+          return const NativeBookAdWidget(
+            placement: AdPlacement.followingInline,
+          );
+        }
+        return _buildListItem(books[InlineAdListHelper.getContentIndex(index)]);
       },
     );
   }
@@ -304,10 +317,10 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
   Widget _buildGridItem(SubscriptionsResponse book) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: book.bookId),
-          ),
+        await BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: book.bookId ?? 1,
+          sourcePlacement: AdPlacement.followingInline,
         );
         // Load lại dữ liệu khi quay lại
         if (mounted) {
@@ -410,10 +423,10 @@ class _FollowingBookScreenState extends State<FollowingBookScreen> {
   Widget _buildListItem(SubscriptionsResponse book) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: book.bookId),
-          ),
+        await BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: book.bookId ?? 1,
+          sourcePlacement: AdPlacement.followingInline,
         );
         // Load lại dữ liệu khi quay lại
         if (mounted) {

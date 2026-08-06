@@ -15,7 +15,7 @@ class SaveNoteRequest {
   final int? startPosition;
   final int? endPosition;
 
-  factory SaveNoteRequest.fromJson(Map<String, dynamic> json){
+  factory SaveNoteRequest.fromJson(Map<String, dynamic> json) {
     return SaveNoteRequest(
       bookId: json["bookId"],
       chapterId: json["chapterId"],
@@ -36,7 +36,7 @@ class SaveNoteRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $chapterId, $selectedText, $noteContent, $startPosition, $endPosition, ";
   }
 }

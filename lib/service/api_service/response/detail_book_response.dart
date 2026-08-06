@@ -1,6 +1,6 @@
 import 'base_response.dart';
 
-class DetailBookResponse extends BaseResponse{
+class DetailBookResponse extends BaseResponse {
   DetailBookResponse({
     required this.bookId,
     required this.title,
@@ -47,7 +47,7 @@ class DetailBookResponse extends BaseResponse{
   final bool? isSubscribed;
   final bool? isFavorited;
 
-  factory DetailBookResponse.fromJson(Map<String, dynamic> json){
+  factory DetailBookResponse.fromJson(Map<String, dynamic> json) {
     return DetailBookResponse(
       bookId: json["book_id"],
       title: json["title"],
@@ -68,8 +68,16 @@ class DetailBookResponse extends BaseResponse{
       totalReviews: json["total_reviews"],
       isSubscribed: json["is_subscribed"],
       isFavorited: json["is_favorited"],
-      chapters: json["chapters"] == null ? [] : List<Chapter>.from(json["chapters"]!.map((x) => Chapter.fromJson(x))),
-      currentChapter: json["current_chapter"] == null ? null : CurrentChapter.fromJson(json["current_chapter"]),
+      chapters:
+          json["chapters"] == null
+              ? []
+              : List<Chapter>.from(
+                json["chapters"]!.map((x) => Chapter.fromJson(x)),
+              ),
+      currentChapter:
+          json["current_chapter"] == null
+              ? null
+              : CurrentChapter.fromJson(json["current_chapter"]),
     );
   }
 
@@ -98,7 +106,7 @@ class DetailBookResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $title, $url, $imageUrl, $excerpt, $views, $status, $rating, $authorId, $authorName, $authorBiography, $categoryId, $categoryName, $createdAt, $updatedAt, $totalChapters, $chapters, $currentChapter, ";
   }
 }
@@ -116,7 +124,7 @@ class Chapter {
   final String? url;
   final int? chapterOrder;
 
-  factory Chapter.fromJson(Map<String, dynamic> json){
+  factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
       chapterId: json["chapter_id"],
       title: json["title"],
@@ -133,7 +141,7 @@ class Chapter {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$chapterId, $title, $url, $chapterOrder, ";
   }
 }
@@ -155,7 +163,7 @@ class CurrentChapter {
   final String? prevChapterUrl;
   final String? content;
 
-  factory CurrentChapter.fromJson(Map<String, dynamic> json){
+  factory CurrentChapter.fromJson(Map<String, dynamic> json) {
     return CurrentChapter(
       chapterId: json["chapter_id"],
       title: json["title"],
@@ -176,7 +184,7 @@ class CurrentChapter {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$chapterId, $title, $chapterOrder, $nextChapterUrl, $prevChapterUrl, $content, ";
   }
 }

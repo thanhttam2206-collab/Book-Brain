@@ -7,7 +7,7 @@ class DeleteNotificationRequest {
   final String? action;
   final int? notificationId;
 
-  factory DeleteNotificationRequest.fromJson(Map<String, dynamic> json){
+  factory DeleteNotificationRequest.fromJson(Map<String, dynamic> json) {
     return DeleteNotificationRequest(
       action: json["action"],
       notificationId: json["notification_id"],
@@ -20,7 +20,7 @@ class DeleteNotificationRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$action, $notificationId, ";
   }
 }

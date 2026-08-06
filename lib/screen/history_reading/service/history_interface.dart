@@ -5,7 +5,7 @@ import 'package:book_brain/service/api_service/response/review_stats_response.da
 
 abstract class IHistoryInterface {
   Future<List<HistoryResponse>?> getHistory({
-     String? status,
+    String? status,
     required int page,
     required int limit,
   });

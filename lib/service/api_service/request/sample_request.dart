@@ -3,14 +3,10 @@ import 'dart:convert';
 SampleRequest sampleRequestFromJson(String str) =>
     SampleRequest.fromJson(json.decode(str));
 
-String sampleRequestToJson(SampleRequest data) =>
-    json.encode(data.toJson());
+String sampleRequestToJson(SampleRequest data) => json.encode(data.toJson());
 
 class SampleRequest {
-  SampleRequest({
-    required this.exampleField1,
-    required this.exampleField2,
-  });
+  SampleRequest({required this.exampleField1, required this.exampleField2});
 
   final dynamic exampleField1;
   final dynamic exampleField2;

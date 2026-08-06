@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 /// Widget đơn giản để hiển thị nội dung sách với thanh trượt
@@ -62,10 +61,7 @@ class _SimpleBookReaderState extends State<SimpleBookReader> {
               ],
               Text(
                 widget.content,
-                style: TextStyle(
-                  fontSize: widget.fontSize,
-                  height: 1.5,
-                ),
+                style: TextStyle(fontSize: widget.fontSize, height: 1.5),
               ),
               // Khoảng trống cuối cùng
               SizedBox(height: 40),

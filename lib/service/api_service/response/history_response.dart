@@ -55,7 +55,7 @@ class HistoryResponse {
   final dynamic currentChapterTitle;
   final bool? isFavorite;
 
-  factory HistoryResponse.fromJson(Map<String, dynamic> json){
+  factory HistoryResponse.fromJson(Map<String, dynamic> json) {
     return HistoryResponse(
       historyId: json["history_id"],
       bookId: json["book_id"],
@@ -116,7 +116,7 @@ class HistoryResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$historyId, $bookId, $readingStatus, $startDate, $finishDate, $notes, $timesRead, $completionRate, $createdAt, $updatedAt, $title, $url, $imageUrl, $excerpt, $views, $bookStatus, $rating, $authorId, $authorName, $categoryId, $categoryName, $totalChapters, $currentChapterId, $lastReadAt, $currentChapterTitle, $isFavorite, ";
   }
 }

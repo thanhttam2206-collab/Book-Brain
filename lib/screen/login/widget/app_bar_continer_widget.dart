@@ -18,9 +18,13 @@ class AppBarContainerWidget extends StatelessWidget {
     ),
     this.avatar,
     this.backgroundColor,
-    this.bottomWidget, this.topPadding,this.isShowBackButton = true,
-  }) : assert(title != null || titleString != null,
-  'title or titleString can\'t be null');
+    this.bottomWidget,
+    this.topPadding,
+    this.isShowBackButton = true,
+  }) : assert(
+         title != null || titleString != null,
+         'title or titleString can\'t be null',
+       );
 
   final Widget child;
   final Widget? title;
@@ -60,20 +64,16 @@ class AppBarContainerWidget extends StatelessWidget {
                 Positioned(
                   top: 0,
                   left: 0,
-                  child: ImageHelper.loadFromAsset(
-                    AssetHelper.icoOvalTop,
-                  ),
+                  child: ImageHelper.loadFromAsset(AssetHelper.icoOvalTop),
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
-                  child: ImageHelper.loadFromAsset(
-                    AssetHelper.icoOvalBottom,
-                  ),
+                  child: ImageHelper.loadFromAsset(AssetHelper.icoOvalBottom),
                 ),
                 // Back button
                 Visibility(
-                  visible: isShowBackButton ?? true ,
+                  visible: isShowBackButton ?? true,
                   child: Positioned(
                     top: MediaQuery.of(context).padding.top + 10,
                     left: 16,
@@ -83,9 +83,7 @@ class AppBarContainerWidget extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            kDefaultPadding,
-                          ),
+                          borderRadius: BorderRadius.circular(kDefaultPadding),
                           color: Colors.white,
                         ),
                         padding: EdgeInsets.all(kItemPadding),
@@ -103,15 +101,20 @@ class AppBarContainerWidget extends StatelessWidget {
                   top: MediaQuery.of(context).padding.top + 30,
                   left: 0,
                   right: 0,
-                  child: title != null
-                      ? title!
-                      : Center(
-                    child: Text(
-                      titleString ?? '',
-                      style: TextStyles.defaultStyle.fontHeader
-                          .whiteTextColor.bold,
-                    ),
-                  ),
+                  child:
+                      title != null
+                          ? title!
+                          : Center(
+                            child: Text(
+                              titleString ?? '',
+                              style:
+                                  TextStyles
+                                      .defaultStyle
+                                      .fontHeader
+                                      .whiteTextColor
+                                      .bold,
+                            ),
+                          ),
                 ),
 
                 // Bottom widget (search bar, etc.)

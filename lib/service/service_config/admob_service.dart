@@ -1,27 +1,40 @@
+import 'package:book_brain/service/ads/ad_availability.dart';
+import 'package:book_brain/service/ads/ad_frequency_manager.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/app_open_ad_manager.dart';
+import 'package:book_brain/service/ads/interstitial_ad_manager.dart';
+import 'package:book_brain/service/ads/rewarded_ad_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
-  static final AdMobService _instance = AdMobService._internal();
-  factory AdMobService() => _instance;
-  AdMobService._internal();
+  AdMobService._internal()
+    : _interstitial = InterstitialAdManager(
+        adUnitId: () => instance.getAdUnitId('interstitial'),
+      ),
+      _rewarded = RewardedAdManager(
+        rewardedAdUnitId: () => instance.getAdUnitId('rewarded'),
+        rewardedInterstitialAdUnitId:
+            () => instance.getAdUnitId('rewarded_interstitial'),
+      ),
+      _appOpen = AppOpenAdManager(
+        adUnitId: () => instance.getAdUnitId('app_open'),
+      );
 
-  // App ID của ứng dụng
-  static const String _appId = 'ca-app-pub-4649011658078977~9956099225';
+  static final AdMobService instance = AdMobService._internal();
+  factory AdMobService() => instance;
 
-  // ID quảng cáo test cho môi trường phát triển
+  static const String appId = 'ca-app-pub-4649011658078977~9956099225';
+
   static const Map<String, String> _testAdUnitIds = {
-    'banner': 'ca-app-pub-3940256099942544/6300978111', // Test Banner ID
-    'interstitial':
-        'ca-app-pub-3940256099942544/1033173712', // Test Interstitial ID
-    'rewarded': 'ca-app-pub-3940256099942544/5224354917', // Test Rewarded ID
-    'rewarded_interstitial':
-        'ca-app-pub-3940256099942544/5354046379', // Test Rewarded Interstitial ID
-    'native': 'ca-app-pub-3940256099942544/2247696110', // Test Native ID
-    'app_open': 'ca-app-pub-3940256099942544/3419835294', // Test App Open ID
+    'banner': 'ca-app-pub-3940256099942544/6300978111',
+    'interstitial': 'ca-app-pub-3940256099942544/1033173712',
+    'rewarded': 'ca-app-pub-3940256099942544/5224354917',
+    'rewarded_interstitial': 'ca-app-pub-3940256099942544/5354046379',
+    'native': 'ca-app-pub-3940256099942544/2247696110',
+    'app_open': 'ca-app-pub-3940256099942544/3419835294',
   };
 
-  // ID quảng cáo thật cho môi trường production
   static const Map<String, String> _productionAdUnitIds = {
     'banner': 'ca-app-pub-4649011658078977/9470907708',
     'interstitial': 'ca-app-pub-4649011658078977/2972560925',
@@ -31,249 +44,57 @@ class AdMobService {
     'app_open': 'ca-app-pub-4649011658078977/2465294465',
   };
 
-  // Never request real ads from debug/profile builds. This protects the
-  // AdMob account from accidental invalid traffic during development.
-  bool get _isProduction => kReleaseMode;
-
-  // Lấy ID quảng cáo dựa trên môi trường
-  String _getAdUnitId(String type) {
-    return _isProduction
-        ? _productionAdUnitIds[type] ?? ''
-        : _testAdUnitIds[type] ?? '';
-  }
-
-  // Phương thức public để lấy ID quảng cáo
-  String getAdUnitId(String type) {
-    return _getAdUnitId(type);
-  }
-
-  BannerAd? _bannerAd;
-  InterstitialAd? _interstitialAd;
-  RewardedAd? _rewardedAd;
-  NativeAd? _nativeAd;
-  AppOpenAd? _appOpenAd;
+  final InterstitialAdManager _interstitial;
+  final RewardedAdManager _rewarded;
+  final AppOpenAdManager _appOpen;
   bool _isInitialized = false;
-  bool _isShowingAd = false;
-  DateTime? _lastAdShownTime;
+
+  bool get adsEnabled => AdAvailability.adsEnabled;
+
+  String getAdUnitId(String type) {
+    final ids = kReleaseMode ? _productionAdUnitIds : _testAdUnitIds;
+    return ids[type] ?? '';
+  }
 
   Future<void> initialize() async {
     if (_isInitialized) return;
-
+    AdFrequencyManager.instance.registerSession();
     try {
-      // Khởi tạo MobileAds
       await MobileAds.instance.initialize();
-
       _isInitialized = true;
-      print('AdMob initialized successfully');
-    } catch (e) {
-      print('Failed to initialize AdMob: $e');
+    } catch (_) {
+      // Ad initialization must never prevent the app from starting.
     }
   }
 
-  BannerAd createBannerAd() {
-    return BannerAd(
-      adUnitId: _getAdUnitId('banner'),
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          print('Banner Ad loaded successfully');
-        },
-        onAdFailedToLoad: (ad, error) {
-          print('Banner Ad failed to load: ${error.message}');
-          ad.dispose();
-        },
-      ),
-    );
+  Future<void> preloadInterstitial() => _interstitial.preload();
+
+  Future<bool> showInterstitialIfEligible({required AdPlacement placement}) =>
+      _interstitial.showIfEligible(placement: placement);
+
+  Future<void> preloadRewarded() => _rewarded.preloadRewarded();
+
+  Future<RewardedAdResult> showRewarded({required AdPlacement placement}) =>
+      _rewarded.showRewarded(placement: placement);
+
+  Future<RewardedAdResult> showRewardedInterstitial({
+    required AdPlacement placement,
+  }) async {
+    await _rewarded.preloadRewardedInterstitial();
+    return _rewarded.showRewardedInterstitial(placement: placement);
   }
 
-  Future<void> loadInterstitialAd() async {
-    try {
-      await InterstitialAd.load(
-        adUnitId: _getAdUnitId('interstitial'),
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) {
-            print('Interstitial Ad loaded successfully');
-            _interstitialAd = ad;
-          },
-          onAdFailedToLoad: (error) {
-            print('Interstitial Ad failed to load: ${error.message}');
-            _interstitialAd = null;
-          },
-        ),
-      );
-    } catch (e) {
-      print('Error loading interstitial ad: $e');
-    }
-  }
+  Future<void> preloadAppOpen() => _appOpen.preload();
+  Future<bool> showAppOpenIfEligible() => _appOpen.showIfEligible();
 
-  Future<void> loadRewardedAd() async {
-    try {
-      await RewardedAd.load(
-        adUnitId: _getAdUnitId('rewarded'),
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-          onAdLoaded: (ad) {
-            print('Rewarded Ad loaded successfully');
-            _rewardedAd = ad;
-          },
-          onAdFailedToLoad: (error) {
-            print('Rewarded Ad failed to load: ${error.message}');
-            _rewardedAd = null;
-          },
-        ),
-      );
-    } catch (e) {
-      print('Error loading rewarded ad: $e');
-    }
-  }
+  // Compatibility aliases for legacy callers while placements are migrated.
+  Future<void> loadInterstitialAd() => preloadInterstitial();
+  Future<void> loadRewardedAd() => preloadRewarded();
+  Future<void> loadAppOpenAd() => preloadAppOpen();
 
-  Future<void> loadNativeAd() async {
-    try {
-      _nativeAd = NativeAd(
-        adUnitId: _getAdUnitId('native'),
-        factoryId: 'listTile',
-        listener: NativeAdListener(
-          onAdLoaded: (_) {
-            print('Native Ad loaded successfully');
-          },
-          onAdFailedToLoad: (ad, error) {
-            print('Native Ad failed to load: ${error.message}');
-            ad.dispose();
-            _nativeAd = null;
-          },
-        ),
-        request: const AdRequest(),
-      );
-
-      await _nativeAd!.load();
-    } catch (e) {
-      print('Error loading native ad: $e');
-    }
-  }
-
-  Future<void> loadAppOpenAd() async {
-    try {
-      print('Loading App Open Ad...');
-      await AppOpenAd.load(
-        adUnitId: _getAdUnitId('app_open'),
-        request: const AdRequest(),
-        adLoadCallback: AppOpenAdLoadCallback(
-          onAdLoaded: (ad) {
-            print('App Open Ad loaded successfully');
-            _appOpenAd = ad;
-            _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
-              onAdShowedFullScreenContent: (ad) {
-                print('App Open Ad showed full screen content');
-                _isShowingAd = true;
-              },
-              onAdDismissedFullScreenContent: (ad) {
-                print('App Open Ad dismissed full screen content');
-                _isShowingAd = false;
-                _lastAdShownTime = DateTime.now();
-                ad.dispose();
-                _appOpenAd = null;
-                // Tải lại quảng cáo mới sau khi hiển thị
-                loadAppOpenAd();
-              },
-              onAdFailedToShowFullScreenContent: (ad, error) {
-                print(
-                  'App Open Ad failed to show full screen content: ${error.message}',
-                );
-                _isShowingAd = false;
-                ad.dispose();
-                _appOpenAd = null;
-                // Tải lại quảng cáo mới sau khi lỗi
-                loadAppOpenAd();
-              },
-            );
-          },
-          onAdFailedToLoad: (error) {
-            print('App Open Ad failed to load: ${error.message}');
-            _appOpenAd = null;
-            // Thử tải lại sau 1 phút nếu tải thất bại
-            Future.delayed(const Duration(minutes: 1), loadAppOpenAd);
-          },
-        ),
-      );
-    } catch (e) {
-      print('Error loading app open ad: $e');
-    }
-  }
-
-  void showInterstitialAd() {
-    if (_interstitialAd != null) {
-      _interstitialAd!.show();
-      _interstitialAd = null;
-      // Tải lại quảng cáo mới sau khi hiển thị
-      loadInterstitialAd();
-    } else {
-      print('Interstitial ad not loaded');
-    }
-  }
-
-  void showRewardedAd() {
-    if (_rewardedAd != null) {
-      _rewardedAd!.show(
-        onUserEarnedReward: (_, reward) {
-          print('User earned reward: ${reward.amount} ${reward.type}');
-        },
-      );
-      _rewardedAd = null;
-      // Tải lại quảng cáo mới sau khi hiển thị
-      loadRewardedAd();
-    } else {
-      print('Rewarded ad not loaded');
-    }
-  }
-
-  void showAppOpenAd() {
-    print('Attempting to show App Open Ad...');
-    print(
-      'App Open Ad status: ${_appOpenAd != null ? 'Loaded' : 'Not loaded'}',
-    );
-    print('Is showing ad: $_isShowingAd');
-
-    if (_appOpenAd != null && !_isShowingAd) {
-      // Kiểm tra thời gian từ lần hiển thị quảng cáo cuối
-      if (_lastAdShownTime != null) {
-        final timeSinceLastAd = DateTime.now().difference(_lastAdShownTime!);
-        print('Time since last ad: ${timeSinceLastAd.inSeconds} seconds');
-        if (timeSinceLastAd < const Duration(minutes: 1)) {
-          print('App Open Ad: Too soon to show another ad');
-          return;
-        }
-      }
-
-      print('Showing App Open Ad');
-      try {
-        _appOpenAd!.show();
-      } catch (e) {
-        print('Error showing App Open Ad: $e');
-        _appOpenAd = null;
-        loadAppOpenAd();
-      }
-    } else {
-      print('App Open Ad not ready to show');
-      // Thử tải lại quảng cáo nếu chưa có
-      if (_appOpenAd == null) {
-        print('Reloading App Open Ad...');
-        loadAppOpenAd();
-      }
-    }
-  }
-
-  NativeAd? getNativeAd() {
-    return _nativeAd;
-  }
-
-  @override
   void dispose() {
-    _bannerAd?.dispose();
-    _interstitialAd?.dispose();
-    _rewardedAd?.dispose();
-    _nativeAd?.dispose();
-    _appOpenAd?.dispose();
+    _interstitial.dispose();
+    _rewarded.dispose();
+    _appOpen.dispose();
   }
 }

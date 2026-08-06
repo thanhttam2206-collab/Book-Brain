@@ -1,5 +1,9 @@
 import 'package:book_brain/screen/home/provider/home_notifier.dart';
 import 'package:book_brain/service/api_service/response/book_info_response.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/book_navigation_ad_helper.dart';
+import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -11,7 +15,6 @@ import '../../../utils/core/helpers/image_helper.dart';
 import '../../../utils/widget/empty_data.dart';
 import '../../../utils/widget/loading_widget.dart';
 import '../../login/widget/app_bar_continer_widget.dart';
-import '../../preview/view/preview_screen.dart';
 
 class AllBookScreen extends StatefulWidget {
   AllBookScreen({super.key, this.title, required this.book});
@@ -245,9 +248,15 @@ class _AllBookScreenState extends State<AllBookScreen> {
                 crossAxisSpacing: 16,
                 childAspectRatio: 0.65,
               ),
-              itemCount: books.length,
+              itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
               itemBuilder: (context, index) {
-                return _buildGridItem(books[index]);
+                if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
+                  return const NativeBookAdWidget(
+                    placement: AdPlacement.allBooksInline,
+                  );
+                }
+                final contentIndex = InlineAdListHelper.getContentIndex(index);
+                return _buildGridItem(books[contentIndex]);
               },
             ),
           ),
@@ -302,9 +311,15 @@ class _AllBookScreenState extends State<AllBookScreen> {
             child: ListView.builder(
               controller: _scrollController,
               padding: EdgeInsets.all(16),
-              itemCount: books.length,
+              itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
               itemBuilder: (context, index) {
-                return _buildListItem(books[index]);
+                if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
+                  return const NativeBookAdWidget(
+                    placement: AdPlacement.allBooksInline,
+                  );
+                }
+                final contentIndex = InlineAdListHelper.getContentIndex(index);
+                return _buildListItem(books[contentIndex]);
               },
             ),
           ),
@@ -323,10 +338,10 @@ class _AllBookScreenState extends State<AllBookScreen> {
   Widget _buildGridItem(BookInfoResponse book) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: book.bookId),
-          ),
+        BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: book.bookId ?? 1,
+          sourcePlacement: AdPlacement.allBooksInline,
         );
       },
       child: Container(
@@ -425,10 +440,10 @@ class _AllBookScreenState extends State<AllBookScreen> {
   Widget _buildListItem(BookInfoResponse book) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PreviewScreen(bookId: book.bookId),
-          ),
+        BookNavigationAdHelper.openBookPreviewWithAd(
+          context: context,
+          bookId: book.bookId ?? 1,
+          sourcePlacement: AdPlacement.allBooksInline,
         );
       },
       child: Container(

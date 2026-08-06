@@ -19,10 +19,7 @@ class NetworkService {
     dio = baseConnect.httpClient;
 
     // Thêm interceptor
-    dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-    ));
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
     // Thêm LoadingInterceptor
     dio.interceptors.add(LoadingInterceptor(isLoading));
@@ -40,6 +37,4 @@ class NetworkService {
   void updateAuthToken(String newToken) {
     baseConnect.updateToken(newToken);
   }
-
-
 }

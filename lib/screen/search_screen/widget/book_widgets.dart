@@ -1,38 +1,42 @@
 import 'package:book_brain/service/api_service/response/search_book_response.dart';
 import 'package:book_brain/utils/core/helpers/asset_helper.dart';
 import 'package:book_brain/utils/core/helpers/network_image_config.dart';
-import 'package:book_brain/widgets/native_ad_widget.dart';
+import 'package:book_brain/service/ads/ad_defaults.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:book_brain/screen/search_screen/provider/search_notifier.dart';
-import 'package:book_brain/utils/core/constants/dimension_constants.dart';
-import 'package:book_brain/utils/core/helpers/image_helper.dart';
-import 'package:book_brain/widgets/ad_banner_widget.dart';
 
 class BooksGridView extends StatelessWidget {
   final List<SearchBookResponse> books;
   final Function(SearchBookResponse book) onTap;
   final ScrollController? scrollController;
+  final AdPlacement adPlacement;
 
   const BooksGridView({
     Key? key,
     required this.books,
     required this.onTap,
     this.scrollController,
+    this.adPlacement = AdPlacement.searchResultsInline,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Tạo danh sách item (2 sách 1 hàng)
     List<Widget> rows = [];
-    int adInterval = 6;
     int count = 0;
     for (int i = 0; i < books.length; i += 2) {
       // Chèn NativeAd sau mỗi 6 sách
-      if (count > 0 && count % adInterval == 0) {
+      if (count >= AdDefaults.nativeFirstContentPosition &&
+          (count - AdDefaults.nativeFirstContentPosition) %
+                  AdDefaults.nativeContentInterval ==
+              0 &&
+          books.length >= 5) {
         rows.add(
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: NativeAdWidget(),
+            child: NativeBookAdWidget(placement: adPlacement),
           ),
         );
       }
@@ -82,7 +86,6 @@ class BookGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int rate = int.tryParse((book.rating ?? '10/10').split('/')[0]) ?? 4;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -160,12 +163,14 @@ class BooksListView extends StatelessWidget {
   final List<SearchBookResponse> books;
   final Function(SearchBookResponse book) onTap;
   final ScrollController? scrollController;
+  final AdPlacement adPlacement;
 
   const BooksListView({
     Key? key,
     required this.books,
     required this.onTap,
     this.scrollController,
+    this.adPlacement = AdPlacement.searchResultsInline,
   }) : super(key: key);
 
   @override
@@ -173,21 +178,15 @@ class BooksListView extends StatelessWidget {
     return ListView.builder(
       controller: scrollController,
       padding: EdgeInsets.only(bottom: 16),
-      itemCount: books.length + (books.length ~/ 6), // Thêm số lượng banner ads
+      itemCount: InlineAdListHelper.getDisplayItemCount(books.length),
       itemBuilder: (context, index) {
-        // Tính toán index thực tế cho books sau khi đã thêm ads
-        int actualIndex = index - (index ~/ 7);
-
-        // Hiển thị banner ads sau mỗi 6 items
-        if (index > 0 && index % 7 == 6) {
+        if (InlineAdListHelper.isAdDisplayIndex(index, books.length)) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: NativeAdWidget(),
+            child: NativeBookAdWidget(placement: adPlacement),
           );
         }
-
-        if (actualIndex >= books.length) return SizedBox.shrink();
-
+        final actualIndex = InlineAdListHelper.getContentIndex(index);
         final book = books[actualIndex];
         return GestureDetector(
           onTap: () => onTap(book),
@@ -205,7 +204,6 @@ class BookListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int rate = int.tryParse((book.rating ?? '10/10').split('/')[0]) ?? 4;
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(

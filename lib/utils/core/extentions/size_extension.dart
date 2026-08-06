@@ -1,4 +1,3 @@
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 extension SizeExtension on num {

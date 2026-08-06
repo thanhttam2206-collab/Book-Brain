@@ -1,6 +1,6 @@
 import 'package:book_brain/service/api_service/response/base_response.dart';
 
-class DeleteFavoritesResponse extends BaseResponse{
+class DeleteFavoritesResponse extends BaseResponse {
   DeleteFavoritesResponse({
     required this.subscriptionId,
     required this.userId,
@@ -13,7 +13,7 @@ class DeleteFavoritesResponse extends BaseResponse{
   final int? bookId;
   final bool? isActive;
 
-  factory DeleteFavoritesResponse.fromJson(Map<String, dynamic> json){
+  factory DeleteFavoritesResponse.fromJson(Map<String, dynamic> json) {
     return DeleteFavoritesResponse(
       subscriptionId: json["subscription_id"],
       userId: json["user_id"],
@@ -30,7 +30,7 @@ class DeleteFavoritesResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$subscriptionId, $userId, $bookId, $isActive, ";
   }
 }

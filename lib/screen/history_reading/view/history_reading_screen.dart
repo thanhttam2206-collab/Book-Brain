@@ -1,7 +1,9 @@
 import 'package:book_brain/screen/detail_book/view/detail_book_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/service/ads/inline_ad_list_helper.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:book_brain/screen/history_reading/provider/history_notifier.dart';
 import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
-import 'package:book_brain/screen/preview/view/preview_screen.dart';
 import 'package:book_brain/service/api_service/response/history_response.dart';
 import 'package:book_brain/utils/core/helpers/network_image_handler.dart';
 import 'package:book_brain/utils/core/helpers/auth_helper.dart';
@@ -190,33 +192,38 @@ class _HistoryReadingScreenState extends State<HistoryReadingScreen> {
 
   Widget _buildAllReading(List<HistoryResponse> allHistory) {
     return ListView.builder(
-      itemCount: allHistory.length,
+      itemCount: InlineAdListHelper.getDisplayItemCount(allHistory.length),
       padding: EdgeInsets.only(top: height_12),
       itemBuilder: (context, index) {
+        if (InlineAdListHelper.isAdDisplayIndex(index, allHistory.length)) {
+          return const NativeBookAdWidget(placement: AdPlacement.historyInline);
+        }
+        final contentIndex = InlineAdListHelper.getContentIndex(index);
         return InkWell(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder:
                     (context) => DetailBookScreen(
-                      bookId: allHistory[index].bookId ?? 1,
-                      chapterId: allHistory[index].currentChapterId,
+                      bookId: allHistory[contentIndex].bookId ?? 1,
+                      chapterId: allHistory[contentIndex].currentChapterId,
                     ),
               ),
             );
           },
           child: _buildReadingBookItem(
-            title: allHistory[index].title ?? '',
-            author: allHistory[index].authorName ?? '',
+            title: allHistory[contentIndex].title ?? '',
+            author: allHistory[contentIndex].authorName ?? '',
             progress: Utils.convertCompletionRate(
-              allHistory[index].completionRate ?? '5',
+              allHistory[contentIndex].completionRate ?? '5',
             ),
             lastRead: Utils.convertToFormattedDate(
-              allHistory[index].lastReadAt.toString(),
+              allHistory[contentIndex].lastReadAt.toString(),
             ),
-            coverAsset: allHistory[index].imageUrl ?? AssetHelper.defaultImage,
-            bookId: allHistory[index].bookId ?? 1,
-            chapterId: allHistory[index].currentChapterId ?? 1,
+            coverAsset:
+                allHistory[contentIndex].imageUrl ?? AssetHelper.defaultImage,
+            bookId: allHistory[contentIndex].bookId ?? 1,
+            chapterId: allHistory[contentIndex].currentChapterId ?? 1,
           ),
         );
       },
@@ -232,30 +239,35 @@ class _HistoryReadingScreenState extends State<HistoryReadingScreen> {
         crossAxisSpacing: 15,
         childAspectRatio: 0.7,
       ),
-      itemCount: currentHistory.length,
+      itemCount: InlineAdListHelper.getDisplayItemCount(currentHistory.length),
       itemBuilder: (context, index) {
+        if (InlineAdListHelper.isAdDisplayIndex(index, currentHistory.length)) {
+          return const NativeBookAdWidget(placement: AdPlacement.historyInline);
+        }
+        final contentIndex = InlineAdListHelper.getContentIndex(index);
         return InkWell(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder:
                     (context) => DetailBookScreen(
-                      bookId: currentHistory[index].bookId ?? 1,
-                      chapterId: currentHistory[index].currentChapterId,
+                      bookId: currentHistory[contentIndex].bookId ?? 1,
+                      chapterId: currentHistory[contentIndex].currentChapterId,
                     ),
               ),
             );
           },
           child: _buildBookCard(
-            title: currentHistory[index].title ?? '',
-            author: currentHistory[index].authorName ?? '',
+            title: currentHistory[contentIndex].title ?? '',
+            author: currentHistory[contentIndex].authorName ?? '',
             coverAsset:
-                currentHistory[index].imageUrl ?? AssetHelper.defaultImage,
+                currentHistory[contentIndex].imageUrl ??
+                AssetHelper.defaultImage,
             addedDate: Utils.convertToFormattedDate(
-              currentHistory[index].lastReadAt.toString(),
+              currentHistory[contentIndex].lastReadAt.toString(),
             ),
             progress: Utils.convertCompletionRate(
-              currentHistory[index].completionRate ?? '0',
+              currentHistory[contentIndex].completionRate ?? '0',
             ),
           ),
         );
@@ -265,33 +277,43 @@ class _HistoryReadingScreenState extends State<HistoryReadingScreen> {
 
   Widget _buildFinishedReading(List<HistoryResponse> completedHistory) {
     return ListView.builder(
-      itemCount: completedHistory.length,
+      itemCount: InlineAdListHelper.getDisplayItemCount(
+        completedHistory.length,
+      ),
       padding: EdgeInsets.only(top: height_12),
       itemBuilder: (context, index) {
+        if (InlineAdListHelper.isAdDisplayIndex(
+          index,
+          completedHistory.length,
+        )) {
+          return const NativeBookAdWidget(placement: AdPlacement.historyInline);
+        }
+        final contentIndex = InlineAdListHelper.getContentIndex(index);
         return InkWell(
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder:
                     (context) => DetailBookScreen(
-                      bookId: completedHistory[index].bookId ?? 1,
-                      chapterId: completedHistory[index].currentChapterId,
+                      bookId: completedHistory[contentIndex].bookId ?? 1,
+                      chapterId:
+                          completedHistory[contentIndex].currentChapterId,
                     ),
               ),
             );
           },
           child: _buildFinishedBookItem(
-            title: completedHistory[index].title ?? '',
-            author: completedHistory[index].authorName ?? '',
+            title: completedHistory[contentIndex].title ?? '',
+            author: completedHistory[contentIndex].authorName ?? '',
             rating:
                 Utils.convertCompletionRate(
-                  completedHistory[index].completionRate ?? '5',
+                  completedHistory[contentIndex].completionRate ?? '5',
                 ).toDouble(),
             finishedDate: Utils.convertToFormattedDate(
-              completedHistory[index].finishDate ?? '',
+              completedHistory[contentIndex].finishDate ?? '',
             ),
             coverAsset:
-                completedHistory[index].imageUrl ??
+                completedHistory[contentIndex].imageUrl ??
                 AssetHelper.harryPotterCover,
           ),
         );

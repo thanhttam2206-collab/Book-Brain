@@ -9,7 +9,7 @@ class ChangePasswordRequest {
   final String? oldPassword;
   final String? newPassword;
 
-  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json){
+  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) {
     return ChangePasswordRequest(
       id: json["id"],
       oldPassword: json["oldPassword"],
@@ -24,7 +24,7 @@ class ChangePasswordRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$id, $oldPassword, $newPassword, ";
   }
 }

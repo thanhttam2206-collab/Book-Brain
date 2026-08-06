@@ -2,6 +2,8 @@ import 'package:book_brain/screen/favorites/view/favorites_screen.dart';
 import 'package:book_brain/screen/home/view/home_screen.dart';
 import 'package:book_brain/screen/ranking/view/ranking_screen.dart';
 import 'package:book_brain/screen/setting/view/setting_screen.dart';
+import 'package:book_brain/service/ads/ad_frequency_manager.dart';
+import 'package:book_brain/service/service_config/admob_service.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,36 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    if (AdMobService.instance.adsEnabled) {
+      AdMobService.instance.preloadInterstitial();
+      AdMobService.instance.preloadRewarded();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      AdFrequencyManager.instance.onAppBackgrounded();
+      AdMobService.instance.preloadAppOpen();
+    } else if (state == AppLifecycleState.resumed) {
+      AdFrequencyManager.instance.onAppForegrounded();
+      AdMobService.instance.showAppOpenIfEligible();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

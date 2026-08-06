@@ -13,7 +13,7 @@ class NotificationRequest {
   final String? title;
   final String? message;
 
-  factory NotificationRequest.fromJson(Map<String, dynamic> json){
+  factory NotificationRequest.fromJson(Map<String, dynamic> json) {
     return NotificationRequest(
       action: json["action"],
       bookId: json["book_id"],
@@ -32,7 +32,7 @@ class NotificationRequest {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$action, $bookId, $chapterId, $title, $message, ";
   }
 }

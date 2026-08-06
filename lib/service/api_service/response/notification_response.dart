@@ -27,7 +27,7 @@ class NotificationResponse {
   final String? chapterTitle;
   final String? chapterUrl;
 
-  factory NotificationResponse.fromJson(Map<String, dynamic> json){
+  factory NotificationResponse.fromJson(Map<String, dynamic> json) {
     return NotificationResponse(
       notificationId: json["notification_id"],
       bookId: json["book_id"],
@@ -60,7 +60,7 @@ class NotificationResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$notificationId, $bookId, $chapterId, $title, $message, $isRead, $createdAt, $bookTitle, $bookUrl, $bookImageUrl, $chapterTitle, $chapterUrl, ";
   }
 }

@@ -1,4 +1,4 @@
-class BookModel{
+class BookModel {
   String? bookName;
   String? bookAuthor;
   String? bookImage;

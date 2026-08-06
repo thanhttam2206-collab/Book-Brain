@@ -38,7 +38,6 @@ double margin_325 = 325.h;
 double margin_200 = 200.h;
 double margin_775 = 775.h;
 
-
 double padding_5 = 5.h;
 double padding_10 = 10.h;
 double padding_16 = 16.h;
@@ -47,8 +46,8 @@ double padding_32 = 32.h;
 double padding_40 = 40.h;
 double padding_80 = 80.h;
 
-
-double getParentWidth(BuildContext context) => MediaQuery.of(context).size.width;
+double getParentWidth(BuildContext context) =>
+    MediaQuery.of(context).size.width;
 double width_1 = 1.w;
 double width_2 = 2.w;
 double width_8 = 8.w;
@@ -81,7 +80,6 @@ double width_320 = 320.w;
 double width_400 = 400.w;
 double width_600 = 600.w;
 double width_800 = 800.w;
-
 
 double height_2 = 2.h;
 double height_4 = 4.h;
@@ -121,7 +119,6 @@ double height_420 = 420.h;
 double height_550 = 550.h;
 double height_500 = 500.h;
 
-
 double fontSize_12 = 12;
 double fontSize_14 = 14;
 double fontSize_16 = 16;
@@ -138,7 +135,6 @@ double fontSize_48sp = 48.sp;
 double fontSize_50sp = 50.sp;
 double fontSize_60sp = 60.sp;
 
-
 double icon_40sp = 40.sp;
 double icon_50sp = 50.sp;
 double icon_60sp = 60.sp;
@@ -148,7 +144,6 @@ double icon_90sp = 90.sp;
 double icon_145sp = 145.sp;
 double icon_400sp = 400.sp;
 
-
 double radius_10 = 10.r;
 double radius_30 = 30.r;
 double radius_32 = 32.r;
@@ -157,8 +152,6 @@ double radius_44 = 44.r;
 double radius_55 = 55.r;
 double radius_60 = 60.r;
 double radius_124 = 124.r;
-
-
 
 const FontWeight w500 = FontWeight.w500;
 
@@ -214,21 +207,17 @@ const Color colorF4FAFF = Color(0xFFF4FAFF);
 Color color_icon = Color.fromRGBO(50, 68, 134, 1.0);
 
 TextStyle text_default_black = TextStyle(
-    color: colorBlack,
-    fontSize: fontSize_40sp
+  color: colorBlack,
+  fontSize: fontSize_40sp,
 );
 
-TextStyle text_default = TextStyle(
-    fontSize: 38.sp,
-    color: Colors.black87
-);
+TextStyle text_default = TextStyle(fontSize: 38.sp, color: Colors.black87);
 
 TextStyle text_button_white = TextStyle(
   fontSize: 43.sp,
   color: Colors.white,
   fontWeight: FontWeight.w500,
 );
-
 
 TextStyle text_label_in_register = TextStyle(
   fontSize: 43.sp,
@@ -242,8 +231,8 @@ TextStyle text_default_white_home = TextStyle(
 );
 
 TextStyle text_fontSize14_717788 = TextStyle(
-    fontSize: 38.sp,
-    color: color141F29.withOpacity(0.7)
+  fontSize: 38.sp,
+  color: color141F29.withOpacity(0.7),
 );
 
 TextStyle text_action_font12 = TextStyle(
@@ -271,8 +260,6 @@ TextStyle text_action_Bold600 = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
-
-
 TextStyle text_action_font16 = TextStyle(
   fontSize: 43.sp,
   color: txtColorAction,
@@ -285,7 +272,6 @@ TextStyle text_action_font18 = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-
 TextStyle text12Bold400 = TextStyle(
   fontSize: 32.sp,
   color: Colors.black,
@@ -297,7 +283,6 @@ TextStyle text12Bold600 = TextStyle(
   color: Colors.black87,
   fontWeight: FontWeight.w600,
 );
-
 
 TextStyle text12Bold500White = TextStyle(
   fontSize: 32.sp,
@@ -352,9 +337,10 @@ TextStyle text20Bold500 = TextStyle(
 );
 
 TextStyle text18Bold700 = TextStyle(
-    fontSize: 48.sp,
-    color: Colors.black87,
-    fontWeight: FontWeight.w700);
+  fontSize: 48.sp,
+  color: Colors.black87,
+  fontWeight: FontWeight.w700,
+);
 
 TextStyle text20Bold500White = TextStyle(
   fontSize: 54.sp,
@@ -369,44 +355,28 @@ TextStyle text20Bold300White = TextStyle(
 
 TextStyle text50Bold900White = TextStyle(
   shadows: [
-    Shadow(
-      blurRadius: 10.0,
-      color: Colors.black12,
-      offset: Offset(0, 5.0),
-    ),
+    Shadow(blurRadius: 10.0, color: Colors.black12, offset: Offset(0, 5.0)),
   ],
   fontSize: 106.sp,
   color: Colors.white,
   fontWeight: FontWeight.w700,
 );
 
+TextStyle text40sp = TextStyle(fontSize: fontSize_40sp, color: Colors.black);
 
-
-
-TextStyle text40sp = TextStyle(
-    fontSize: fontSize_40sp,
-    color: Colors.black
-);
-
-TextStyle text43sp = TextStyle(
-    fontSize: fontSize_43sp,
-    color: Colors.black
-);
+TextStyle text43sp = TextStyle(fontSize: fontSize_43sp, color: Colors.black);
 
 TextStyle text43spWhite = TextStyle(
-    fontSize: fontSize_43sp,
-    color: Colors.white
+  fontSize: fontSize_43sp,
+  color: Colors.white,
 );
 
-TextStyle text45sp = TextStyle(
-    fontSize: fontSize_45sp,
-    color: Colors.black
-);
+TextStyle text45sp = TextStyle(fontSize: fontSize_45sp, color: Colors.black);
 
 TextStyle text45spItalic = TextStyle(
-    fontSize: fontSize_45sp,
-    color: Colors.black,
-    fontStyle: FontStyle.italic
+  fontSize: fontSize_45sp,
+  color: Colors.black,
+  fontStyle: FontStyle.italic,
 );
 
 TextStyle text45spColorBlue = TextStyle(
@@ -426,30 +396,24 @@ TextStyle text45spBold700ColorBackground = TextStyle(
 );
 
 TextStyle text45spBold700 = TextStyle(
-    fontSize: fontSize_45sp,
-    fontWeight: FontWeight.w700
+  fontSize: fontSize_45sp,
+  fontWeight: FontWeight.w700,
 );
 
-TextStyle text50sp = TextStyle(
-    fontSize: fontSize_50sp,
-    color: Colors.black
-);
+TextStyle text50sp = TextStyle(fontSize: fontSize_50sp, color: Colors.black);
 
 TextStyle text50spBold700 = TextStyle(
-    fontSize: fontSize_50sp,
-    fontWeight: FontWeight.w700
+  fontSize: fontSize_50sp,
+  fontWeight: FontWeight.w700,
 );
 
 TextStyle text50spBold700Red = TextStyle(
-    fontSize: fontSize_50sp,
-    color: colorRed,
-    fontWeight: FontWeight.w700
+  fontSize: fontSize_50sp,
+  color: colorRed,
+  fontWeight: FontWeight.w700,
 );
 
-TextStyle text60spRed = TextStyle(
-  fontSize: fontSize_60sp,
-  color: colorRed,
-);
+TextStyle text60spRed = TextStyle(fontSize: fontSize_60sp, color: colorRed);
 
 TextStyle text14OpacityBold400 = TextStyle(
   fontSize: 38.sp,
@@ -495,4 +459,3 @@ TextStyle text14OBold600 = TextStyle(
   color: color828282,
   fontWeight: FontWeight.w600,
 );
-

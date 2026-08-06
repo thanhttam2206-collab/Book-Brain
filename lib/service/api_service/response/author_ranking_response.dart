@@ -19,7 +19,7 @@ class AuthorRankingResponse {
   final String? authorScore;
   final String? overallRank;
 
-  factory AuthorRankingResponse.fromJson(Map<String, dynamic> json){
+  factory AuthorRankingResponse.fromJson(Map<String, dynamic> json) {
     return AuthorRankingResponse(
       authorId: json["author_id"],
       name: json["name"],
@@ -44,7 +44,7 @@ class AuthorRankingResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$authorId, $name, $totalBooks, $totalViews, $avgRating, $totalFavorites, $authorScore, $overallRank, ";
   }
 }

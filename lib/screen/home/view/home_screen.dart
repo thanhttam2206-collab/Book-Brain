@@ -6,6 +6,7 @@ import 'package:book_brain/screen/login/widget/app_bar_continer_widget.dart';
 import 'package:book_brain/screen/notification/view/notification_screen.dart';
 import 'package:book_brain/screen/ranking/view/ranking_screen.dart';
 import 'package:book_brain/screen/search_screen/view/search_screen.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/constants/textstyle_ext.dart';
 import 'package:book_brain/utils/core/common/login_required_dialog.dart';
@@ -14,7 +15,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:book_brain/widgets/ad_banner_widget.dart';
+import 'package:book_brain/widgets/ads/adaptive_banner_ad_widget.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 
 import '../../../utils/widget/loading_widget.dart';
 import '../../history_reading/view/history_reading_screen.dart';
@@ -308,8 +310,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       // Thêm Native Ad sau danh sách Top thịnh hành
                       SizedBox(height: kMediumPadding),
-                      const AdBannerWidget(
-                        key: ValueKey('home-trending-banner'),
+                      const NativeBookAdWidget(
+                        key: ValueKey('home-trending-native'),
+                        placement: AdPlacement.homeAfterTrending,
                       ),
 
                       HorizontalBookList(
@@ -330,7 +333,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       // Thêm Banner Ad ở cuối màn hình
                       SizedBox(height: kMediumPadding),
-                      const AdBannerWidget(key: ValueKey('home-footer-banner')),
+                      const AdaptiveBannerAdWidget(
+                        key: ValueKey('home-footer-banner'),
+                        placement: AdPlacement.homeFooter,
+                      ),
                       SizedBox(height: kMediumPadding),
                     ],
                   ),

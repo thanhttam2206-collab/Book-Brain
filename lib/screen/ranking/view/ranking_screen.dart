@@ -1,5 +1,7 @@
 import 'package:book_brain/screen/ranking/provider/ranking_notifier.dart';
 import 'package:book_brain/screen/ranking/widget/ranking_podium_widget.dart';
+import 'package:book_brain/service/ads/ad_placement.dart';
+import 'package:book_brain/widgets/ads/native_book_ad_widget.dart';
 import 'package:book_brain/utils/core/constants/color_constants.dart';
 import 'package:book_brain/utils/core/constants/dimension_constants.dart';
 import 'package:book_brain/utils/core/constants/mock_data.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/widget/loading_widget.dart';
-import '../../main_app.dart';
 import 'book_ranking_screen.dart';
 
 class RankingScreen extends StatefulWidget {
@@ -54,7 +55,18 @@ class _RankingScreenState extends State<RankingScreen> {
                 ),
                 view: Padding(
                   padding: EdgeInsets.all(kDefaultPadding),
-                  child: RankingPodium(topAuthor: presenter.authRanking ?? []),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: RankingPodium(
+                          topAuthor: presenter.authRanking ?? [],
+                        ),
+                      ),
+                      const NativeBookAdWidget(
+                        placement: AdPlacement.rankingAuthorsInline,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               TabModel(

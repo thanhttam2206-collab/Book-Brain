@@ -18,9 +18,9 @@ abstract class BaseNotifier extends ChangeNotifier {
   }
 
   Future<T> execute<T>(
-      Future<T> Function() action, {
-        Function(dynamic error)? onError,
-      }) async {
+    Future<T> Function() action, {
+    Function(dynamic error)? onError,
+  }) async {
     setLoading(true);
     try {
       return await action();

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../core/constants/color_constants.dart';
 import '../core/constants/dimension_constants.dart';
+
 class DashLineWidget extends StatelessWidget {
-  const DashLineWidget({Key? key, this.height = 1, this.color = ColorPalette.dividerColor}) : super(key: key);
+  const DashLineWidget({
+    Key? key,
+    this.height = 1,
+    this.color = ColorPalette.dividerColor,
+  }) : super(key: key);
 
   final double height;
   final Color color;
@@ -23,9 +28,7 @@ class DashLineWidget extends StatelessWidget {
               return SizedBox(
                 width: dashWidth,
                 height: dashHeight,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: color),
-                ),
+                child: DecoratedBox(decoration: BoxDecoration(color: color)),
               );
             }),
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

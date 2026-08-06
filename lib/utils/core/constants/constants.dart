@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+
 class Constants {
   static const String ACCESS_TOKEN = "AccessToken"; //"access_token
   static const String SERIAL_NO = "SerialNo";

@@ -1,4 +1,3 @@
-
 // su dung Singleton Method Design Pattern de khoi tao doi tuong dung 1 lan
 import 'package:hive_ce_flutter/adapters.dart';
 

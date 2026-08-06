@@ -1,6 +1,6 @@
 import 'package:book_brain/service/api_service/response/base_response.dart';
 
-class SubscriptionsResponse extends BaseResponse{
+class SubscriptionsResponse extends BaseResponse {
   SubscriptionsResponse({
     required this.bookId,
     required this.title,
@@ -37,7 +37,7 @@ class SubscriptionsResponse extends BaseResponse{
   final DateTime? subscribedAt;
   final dynamic lastNotifiedAt;
 
-  factory SubscriptionsResponse.fromJson(Map<String, dynamic> json){
+  factory SubscriptionsResponse.fromJson(Map<String, dynamic> json) {
     return SubscriptionsResponse(
       bookId: json["book_id"],
       title: json["title"],
@@ -78,7 +78,7 @@ class SubscriptionsResponse extends BaseResponse{
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$bookId, $title, $url, $imageUrl, $excerpt, $views, $status, $rating, $authorId, $authorName, $categoryId, $categoryName, $subscriptionId, $isActive, $subscribedAt, $lastNotifiedAt, ";
   }
 }

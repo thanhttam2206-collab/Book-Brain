@@ -6,11 +6,11 @@ class UserModel {
   final String? isAds;
 
   UserModel({
-     this.id,
-     this.username,
-     this.email,
-     this.createdAt,
-     this.isAds = 'on',
+    this.id,
+    this.username,
+    this.email,
+    this.createdAt,
+    this.isAds = 'on',
   });
 
   // Ánh xạ JSON sang User
@@ -26,18 +26,11 @@ class UserModel {
 
   // Chuyển đối tượng User sang JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'username': username,
-      'email': email,
-      'isAds': isAds,
-    };
+    return {'id': id, 'username': username, 'email': email, 'isAds': isAds};
   }
 
   @override
   String toString() {
     return 'UserModel{id: $id, username: $username, email: $email, createdAt: $createdAt, isAds: $isAds}';
   }
-
-
 }

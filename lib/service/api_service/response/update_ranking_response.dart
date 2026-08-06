@@ -9,7 +9,7 @@ class UpdateRankingResponse {
   final int? updatedAuthors;
   final DateTime? timestamp;
 
-  factory UpdateRankingResponse.fromJson(Map<String, dynamic> json){
+  factory UpdateRankingResponse.fromJson(Map<String, dynamic> json) {
     return UpdateRankingResponse(
       updatedBooks: json["updated_books"],
       updatedAuthors: json["updated_authors"],
@@ -24,7 +24,7 @@ class UpdateRankingResponse {
   };
 
   @override
-  String toString(){
+  String toString() {
     return "$updatedBooks, $updatedAuthors, $timestamp, ";
   }
 }

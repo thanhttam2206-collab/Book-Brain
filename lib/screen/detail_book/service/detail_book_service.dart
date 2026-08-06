@@ -5,14 +5,18 @@ import 'package:book_brain/service/api_service/request/save_note_request.dart';
 import 'package:book_brain/service/api_service/response/base_response.dart';
 import 'package:book_brain/service/api_service/response/note_response.dart';
 
-
 class DetailBookService implements IDetailBookInterface {
   final ApiServices apiServices = ApiServices();
 
-
   @override
-  Future<List<NoteResponse>?> getNoteBook({required int bookId, required int chapterId}) async{
-    final BaseResponse<NoteResponse> response = await apiServices.getNoteBook(bookId: bookId, chapterId: chapterId);
+  Future<List<NoteResponse>?> getNoteBook({
+    required int bookId,
+    required int chapterId,
+  }) async {
+    final BaseResponse<NoteResponse> response = await apiServices.getNoteBook(
+      bookId: bookId,
+      chapterId: chapterId,
+    );
     if (response.code != null) {
       List<NoteResponse> data = response.data!;
       return data;
@@ -21,7 +25,14 @@ class DetailBookService implements IDetailBookInterface {
   }
 
   @override
-  Future<bool?> saveNoteBook({required int bookId, required int chapterId, required int startPosition, required int endPosition, required String selectedText, required String noteContent}) async{
+  Future<bool?> saveNoteBook({
+    required int bookId,
+    required int chapterId,
+    required int startPosition,
+    required int endPosition,
+    required String selectedText,
+    required String noteContent,
+  }) async {
     final SaveNoteRequest request = SaveNoteRequest(
       bookId: bookId,
       chapterId: chapterId,
@@ -30,7 +41,9 @@ class DetailBookService implements IDetailBookInterface {
       selectedText: selectedText,
       noteContent: noteContent,
     );
-    final BaseResponse<NoteResponse> response = await apiServices.sentNoteBook(request);
+    final BaseResponse<NoteResponse> response = await apiServices.sentNoteBook(
+      request,
+    );
     if (response.code != null) {
       return true;
     }
@@ -38,11 +51,11 @@ class DetailBookService implements IDetailBookInterface {
   }
 
   @override
-  Future<bool?> deleteNoteBook({required int noteId}) async{
-    final DeleteNoteRequest request = DeleteNoteRequest(
-      noteId: noteId
+  Future<bool?> deleteNoteBook({required int noteId}) async {
+    final DeleteNoteRequest request = DeleteNoteRequest(noteId: noteId);
+    final BaseResponse<NoteResponse> response = await apiServices.deleteNote(
+      request,
     );
-    final BaseResponse<NoteResponse> response = await apiServices.deleteNote(request);
     if (response.code != null) {
       return true;
     }
